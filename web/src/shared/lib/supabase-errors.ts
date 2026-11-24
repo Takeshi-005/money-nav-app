@@ -1,0 +1,4 @@
+export const SUPABASE_ERROR_CODES = {
+  NO_ROWS: "PGRST116",
+  UNIQUE_VIOLATION: "23505",
+} as const;

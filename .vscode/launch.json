@@ -1,0 +1,24 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Generate API Types",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/packages/api-types/scripts/generate-types.ts",
+      "args": [],
+      "console": "integratedTerminal",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "skipFiles": ["<node_internals>/**"],
+      "resolveSourceMapLocations": ["${workspaceFolder}/**", "!**/node_modules/**"]
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Full Development",
+      "configurations": ["Generate API Types"]
+    }
+  ]
+}

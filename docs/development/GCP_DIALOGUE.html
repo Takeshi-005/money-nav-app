@@ -1,0 +1,1101 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>マネイッポ GCP 対談</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+JP:wght@400;500;600&family=Zen+Old+Mincho:wght@700&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --ground:#F3F5F9;
+  --surface:#FFFFFF;
+  --surface-2:#E8ECF4;
+  --ink:#19202E;
+  --muted:#566076;
+  --line:#D6DCE8;
+  --line-strong:#A7B1C6;
+  --accent:#2D489B;
+  --accent-wash:#E2E8F8;
+  --accent-ink:#FFFFFF;
+  --wakaba-y:#F2C12E;
+  --wakaba-g:#2E9747;
+  --pit-ink:#8A4A0A;
+  --pit-bg:#FBEAD0;
+  --fix-ink:#0A6A61;
+  --fix-bg:#D6F0EA;
+  --comment:#6A7389;
+  --f-display:"Zen Old Mincho","Hiragino Mincho ProN","Yu Mincho",serif;
+  --f-body:"IBM Plex Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#10141C;
+    --surface:#171C27;
+    --surface-2:#222939;
+    --ink:#E3E7F0;
+    --muted:#9AA4B9;
+    --line:#2A3142;
+    --line-strong:#4A546E;
+    --accent:#98ADEF;
+    --accent-wash:#1C2541;
+    --accent-ink:#10141C;
+    --wakaba-y:#F2C12E;
+    --wakaba-g:#46B360;
+    --pit-ink:#F2BA73;
+    --pit-bg:#3A2913;
+    --fix-ink:#78D8CA;
+    --fix-bg:#113430;
+    --comment:#8793AB;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#10141C;
+  --surface:#171C27;
+  --surface-2:#222939;
+  --ink:#E3E7F0;
+  --muted:#9AA4B9;
+  --line:#2A3142;
+  --line-strong:#4A546E;
+  --accent:#98ADEF;
+  --accent-wash:#1C2541;
+  --accent-ink:#10141C;
+  --wakaba-y:#F2C12E;
+  --wakaba-g:#46B360;
+  --pit-ink:#F2BA73;
+  --pit-bg:#3A2913;
+  --fix-ink:#78D8CA;
+  --fix-bg:#113430;
+  --comment:#8793AB;
+  color-scheme:dark;
+}
+
+@media (prefers-reduced-motion: no-preference){
+  html{scroll-behavior:smooth}
+}
+
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--f-body);
+  font-size:16px;
+  line-height:1.85;
+  line-break:strict;
+  -webkit-font-smoothing:antialiased;
+}
+
+.wrap{
+  max-width:1120px;
+  margin-inline:auto;
+  padding-inline:20px;
+  padding-block:48px 96px;
+}
+
+a{color:var(--accent);text-underline-offset:.2em}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
+
+h1,h2,h3{text-wrap:balance;word-break:auto-phrase}
+
+code{
+  font-family:var(--f-mono);
+  font-size:.86em;
+  background:var(--surface-2);
+  padding:.08em .35em;
+  border-radius:4px;
+  overflow-wrap:anywhere;
+}
+
+.eyebrow{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:baseline;
+  gap:.75rem;
+  margin:0;
+  font-size:.8125rem;
+  color:var(--muted);
+  letter-spacing:.06em;
+}
+.eyebrow code{background:none;padding:0;font-size:.8rem;letter-spacing:0}
+
+/* ---------- masthead ---------- */
+.masthead{max-width:48rem;display:flex;flex-direction:column;gap:1.25rem}
+.masthead h1{
+  font-family:var(--f-display);
+  font-weight:700;
+  font-size:clamp(2rem,1.3rem + 2.6vw,2.875rem);
+  line-height:1.3;
+  letter-spacing:.03em;
+  margin:0;
+}
+.lede{margin:0;font-size:1.0625rem;max-width:40em}
+.facts{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(10.5rem,1fr));
+  gap:1rem 1.5rem;
+  margin:0;
+  padding-block:1rem;
+  border-block:1px solid var(--line);
+}
+.facts div{display:flex;flex-direction:column;gap:.15rem}
+.facts dt{font-size:.75rem;color:var(--muted);letter-spacing:.06em}
+.facts dd{margin:0;font-size:.9375rem;font-variant-numeric:tabular-nums}
+.facts dd code{background:none;padding:0;font-size:.875rem}
+.status{color:var(--pit-ink)}
+.note{margin:0;font-size:.9375rem;color:var(--muted);max-width:42em}
+.cast{display:flex;flex-wrap:wrap;gap:1rem 2.5rem}
+.cast-item{display:flex;align-items:center;gap:.75rem;font-size:.9375rem}
+.cast-item strong{font-weight:600}
+.cast-item span{color:var(--muted)}
+
+/* ---------- speaker badges ---------- */
+.who{
+  width:2.25rem;height:2.25rem;
+  border-radius:50%;
+  display:grid;place-items:center;
+  flex:none;
+}
+.who-b{background:var(--surface);border:1px solid var(--line-strong)}
+.wakaba{
+  width:.875rem;height:1.05rem;
+  background:linear-gradient(90deg,var(--wakaba-y) 50%,var(--wakaba-g) 50%);
+  clip-path:polygon(0 0,50% 25%,100% 0,100% 66.7%,50% 100%,0 66.7%);
+}
+.who-e{
+  background:var(--accent);
+  color:var(--accent-ink);
+  font-family:var(--f-display);
+  font-weight:700;
+  font-size:1rem;
+  line-height:1;
+}
+
+/* ---------- layout ---------- */
+.layout{
+  display:grid;
+  grid-template-columns:13.5rem minmax(0,1fr);
+  gap:4rem;
+  margin-top:3.5rem;
+  align-items:start;
+}
+.toc{
+  position:sticky;
+  top:calc(env(safe-area-inset-top,0px) + 24px);
+  max-height:calc(100vh - 48px);
+  overflow-y:auto;
+  font-size:.875rem;
+}
+.toc-title{margin:0 0 .75rem;font-size:.75rem;color:var(--muted);letter-spacing:.12em}
+.toc ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.125rem}
+.toc a{
+  display:grid;
+  grid-template-columns:3.25rem 1fr;
+  column-gap:.25rem;
+  padding:.4rem .6rem;
+  border-radius:6px;
+  color:var(--ink);
+  text-decoration:none;
+  line-height:1.5;
+}
+.toc a:hover{background:var(--surface-2)}
+.toc a[aria-current="true"]{background:var(--accent-wash);color:var(--accent);font-weight:600}
+.toc-n{color:var(--muted);font-variant-numeric:tabular-nums}
+.toc a[aria-current="true"] .toc-n{color:var(--accent)}
+.toc-f{grid-column:2;font-family:var(--f-mono);font-size:.72rem;color:var(--muted);font-weight:400}
+.toc a.toc-plain{grid-template-columns:1fr}
+
+article{max-width:46rem;min-width:0}
+
+.chapter{
+  padding-block:3rem;
+  border-top:1px solid var(--line);
+  scroll-margin-top:16px;
+}
+.chapter:first-child{border-top:0;padding-top:0}
+.chapter h2{
+  font-family:var(--f-display);
+  font-weight:700;
+  font-size:1.625rem;
+  line-height:1.45;
+  letter-spacing:.02em;
+  margin:.375rem 0 2rem;
+}
+
+/* ---------- dialogue ---------- */
+.dialogue{display:flex;flex-direction:column;gap:1.5rem}
+.line{
+  display:grid;
+  grid-template-columns:2.25rem minmax(0,1fr);
+  gap:1rem;
+  align-items:start;
+  scroll-margin-top:24px;
+}
+.say{display:flex;flex-direction:column;gap:.875rem;min-width:0;padding-top:.2rem}
+.say p{margin:0}
+.b .say{font-weight:500}
+.say ul,.say ol{margin:0;padding-left:1.35rem;display:flex;flex-direction:column;gap:.35rem}
+
+.chip{
+  display:inline-block;
+  font-size:.72rem;
+  font-weight:600;
+  letter-spacing:.06em;
+  padding:.05rem .55rem;
+  border-radius:999px;
+  margin-right:.5rem;
+  line-height:1.7;
+  vertical-align:.08em;
+}
+.pit{color:var(--pit-ink);background:var(--pit-bg)}
+.fix{color:var(--fix-ink);background:var(--fix-bg)}
+
+/* ---------- code & tables ---------- */
+.snippet{
+  margin:0;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:8px;
+  overflow:hidden;
+}
+.snippet figcaption{
+  font-family:var(--f-mono);
+  font-size:.75rem;
+  color:var(--muted);
+  padding:.45rem .875rem;
+  border-bottom:1px solid var(--line);
+}
+.snippet pre{margin:0;padding:.875rem 1rem;overflow-x:auto;font-size:.8125rem;line-height:1.75}
+.snippet pre code{background:none;padding:0;font-size:inherit;overflow-wrap:normal}
+.c{color:var(--comment)}
+
+.table-wrap{
+  overflow-x:auto;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:var(--surface);
+}
+table{border-collapse:collapse;width:100%;font-size:.875rem;line-height:1.65;font-weight:400}
+th,td{text-align:left;padding:.6rem .875rem;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr:last-child td{border-bottom:0}
+th{font-weight:600;color:var(--muted);font-size:.8rem;white-space:nowrap;letter-spacing:.04em}
+td.num{font-variant-numeric:tabular-nums;color:var(--muted);white-space:nowrap}
+td:first-child{white-space:nowrap}
+
+.addr{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:flex-start;
+  gap:.5rem .25rem;
+  padding:1rem;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:8px;
+}
+.seg{display:flex;flex-direction:column;gap:.3rem}
+.seg code{font-size:.8125rem;padding:.2em .45em}
+.seg span{font-size:.7rem;color:var(--muted);letter-spacing:.04em;padding-left:.2rem}
+.sep{font-family:var(--f-mono);color:var(--muted);font-size:.875rem;padding-top:.15rem}
+
+/* ---------- diagram ---------- */
+.diagram{
+  margin:0;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:1rem 1rem .75rem;
+  display:flex;flex-direction:column;gap:.5rem;
+}
+.diagram .scroll{overflow-x:auto}
+.diagram svg{display:block;width:100%;min-width:680px;height:auto;font-family:var(--f-body)}
+.diagram figcaption{font-size:.8125rem;color:var(--muted);font-weight:400}
+.dg-node{fill:var(--surface);stroke:var(--line-strong);stroke-width:1}
+.dg-run{fill:var(--accent-wash);stroke:var(--accent);stroke-width:1.5}
+.dg-ext{stroke-dasharray:4 3}
+.dg-nl{fill:var(--ink);font-size:13px;font-weight:600}
+.dg-run-l{fill:var(--accent);font-size:15px;font-weight:600}
+.dg-ns{fill:var(--muted);font-size:11px}
+.dg-lane{fill:var(--muted);font-size:10.5px;font-weight:600;letter-spacing:.08em}
+.dg-edge{stroke:var(--muted);stroke-width:1.25;fill:none}
+.dg-el{fill:var(--muted);font-size:10.5px}
+.dg-ah{fill:var(--muted)}
+
+/* ---------- insight ---------- */
+.insight{
+  margin-top:2.25rem;
+  background:var(--accent-wash);
+  border-radius:10px;
+  padding:1.25rem 1.5rem;
+  display:flex;flex-direction:column;gap:.625rem;
+}
+.insight h3{
+  margin:0;
+  font-family:var(--f-mono);
+  font-size:.75rem;
+  font-weight:500;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--accent);
+}
+.insight ul{margin:0;padding-left:1.25rem;display:flex;flex-direction:column;gap:.5rem;font-size:.9375rem}
+
+/* ---------- quiz ---------- */
+.quiz{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1.5rem;counter-reset:q}
+.quiz > li{
+  counter-increment:q;
+  display:grid;
+  grid-template-columns:2.25rem minmax(0,1fr);
+  gap:1rem;
+}
+.quiz > li::before{
+  content:"Q" counter(q);
+  font-family:var(--f-mono);
+  font-weight:500;
+  color:var(--accent);
+  padding-top:.1rem;
+}
+.q-body{display:flex;flex-direction:column;gap:.625rem;min-width:0}
+.q-body > p{margin:0;font-weight:500}
+details summary{
+  cursor:pointer;
+  color:var(--accent);
+  font-size:.875rem;
+  font-weight:500;
+  width:fit-content;
+}
+details .answer{
+  margin-top:.625rem;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:1rem 1.25rem;
+  font-size:.9375rem;
+  display:flex;flex-direction:column;gap:.625rem;
+}
+details .answer p{margin:0}
+
+.section-lede{margin:0 0 1.75rem;color:var(--muted);font-size:.9375rem}
+
+footer{
+  margin-top:1rem;
+  padding-top:2rem;
+  border-top:1px solid var(--line);
+  font-size:.8125rem;
+  color:var(--muted);
+  display:flex;flex-direction:column;gap:.35rem;
+}
+footer p{margin:0}
+
+@media (max-width:880px){
+  .layout{grid-template-columns:minmax(0,1fr);gap:2rem;margin-top:2.5rem}
+  .toc{
+    position:static;max-height:none;overflow:visible;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:1rem;
+  }
+  .toc ul{display:grid;grid-template-columns:repeat(auto-fill,minmax(12rem,1fr));gap:.125rem .5rem}
+  .chapter:first-child{padding-top:1rem}
+}
+@media (max-width:480px){
+  .wrap{padding-inline:16px;padding-block:32px 72px}
+  .line,.quiz > li{grid-template-columns:1.875rem minmax(0,1fr);gap:.75rem}
+  .who{width:1.875rem;height:1.875rem}
+  .who-e{font-size:.875rem}
+  .chapter h2{font-size:1.4rem}
+  .insight{padding:1.125rem 1.125rem}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="masthead">
+    <p class="eyebrow">学習ノート · Google Cloud 構成</p>
+    <h1>マネイッポ GCP 対談</h1>
+    <p class="lede">投資学習アプリ「マネイッポ」を動かしていた Google Cloud の構成を、初級者と上級者の会話で読み解くノートです。</p>
+    <dl class="facts">
+      <div><dt>プロジェクト</dt><dd><code>ai-product-446711</code></dd></div>
+      <div><dt>リージョン</dt><dd><code>asia-northeast1</code>（東京）</dd></div>
+      <div><dt>定義</dt><dd><code>terraform/*.tf</code></dd></div>
+      <div><dt>現在の状態</dt><dd class="status">2026-08-18 削除済み</dd></div>
+    </dl>
+    <p class="note">リソースは削除済みですが、Terraform の定義はリポジトリに残っています。第1〜8章は稼働していた頃の設計を、第9章は片付けの手順を扱います。</p>
+    <div class="cast">
+      <div class="cast-item"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><p style="margin:0"><strong>初級者</strong> <span>Next.js は書ける。クラウドはこれから。</span></p></div>
+      <div class="cast-item"><span class="who who-e" role="img" aria-label="上級者">上</span><p style="margin:0"><strong>上級者</strong> <span>この構成を組み、そして片付けた人。</span></p></div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="toc" aria-label="目次">
+      <p class="toc-title">目次</p>
+      <ul>
+        <li><a href="#ch1"><span class="toc-n">第1章</span>全体像<span class="toc-f">main.tf</span></a></li>
+        <li><a href="#ch2"><span class="toc-n">第2章</span>Cloud Run<span class="toc-f">cloud-run.tf</span></a></li>
+        <li><a href="#ch3"><span class="toc-n">第3章</span>Artifact Registry<span class="toc-f">web/Dockerfile</span></a></li>
+        <li><a href="#ch4"><span class="toc-n">第4章</span>Secret Manager<span class="toc-f">secrets.tf</span></a></li>
+        <li><a href="#ch5"><span class="toc-n">第5章</span>IAM<span class="toc-f">iam.tf</span></a></li>
+        <li><a href="#ch6"><span class="toc-n">第6章</span>Scheduler と OIDC<span class="toc-f">cloud-scheduler.tf</span></a></li>
+        <li><a href="#ch7"><span class="toc-n">第7章</span>WIF と CI/CD<span class="toc-f">workload-identity.tf</span></a></li>
+        <li><a href="#ch8"><span class="toc-n">第8章</span>Terraform の state<span class="toc-f">backend.tf</span></a></li>
+        <li><a href="#ch9"><span class="toc-n">第9章</span>片付け編<span class="toc-f">SHUTDOWN_CHECKLIST.md</span></a></li>
+        <li><a class="toc-plain" href="#quiz">理解度チェック</a></li>
+        <li><a class="toc-plain" href="#index">改善点・落とし穴の索引</a></li>
+      </ul>
+    </nav>
+
+    <article>
+      <!-- 第1章 -->
+      <section class="chapter" id="ch1">
+        <p class="eyebrow"><span>第1章</span><code>terraform/main.tf</code></p>
+        <h2>全体像：主な登場人物は6つ</h2>
+        <div class="dialogue">
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p>このアプリは Google Cloud の何を使っていたんですか？</p></div></div>
+
+          <div class="line e"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say">
+            <p>中心になるのは6つのサービスだよ。流れを図にするとこうなる。</p>
+            <figure class="diagram">
+              <div class="scroll">
+                <svg viewBox="0 0 780 290" role="img" aria-labelledby="dg-title">
+                  <title id="dg-title">デプロイ、リクエスト、定時処理の3つの流れが Cloud Run に集まり、Cloud Run から Vertex AI と Supabase を呼び、Secret Manager から起動時に秘密情報を読み込む構成図</title>
+                  <defs>
+                    <marker id="ah" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+                      <path d="M0,0 L8,4 L0,8 z" class="dg-ah"/>
+                    </marker>
+                  </defs>
+
+                  <text x="16" y="14" class="dg-lane">デプロイ</text>
+                  <text x="16" y="116" class="dg-lane">リクエスト</text>
+                  <text x="16" y="218" class="dg-lane">定時処理</text>
+
+                  <rect x="16" y="24" width="150" height="48" rx="6" class="dg-node"/>
+                  <text x="91" y="53" text-anchor="middle" class="dg-nl">GitHub Actions</text>
+
+                  <rect x="16" y="126" width="150" height="48" rx="6" class="dg-node"/>
+                  <text x="91" y="155" text-anchor="middle" class="dg-nl">ブラウザ</text>
+
+                  <rect x="16" y="228" width="150" height="48" rx="6" class="dg-node"/>
+                  <text x="91" y="248" text-anchor="middle" class="dg-nl">Cloud Scheduler</text>
+                  <text x="91" y="265" text-anchor="middle" class="dg-ns">毎日 9:00 JST ほか</text>
+
+                  <rect x="250" y="24" width="150" height="48" rx="6" class="dg-node"/>
+                  <text x="325" y="53" text-anchor="middle" class="dg-nl">Artifact Registry</text>
+
+                  <rect x="468" y="24" width="130" height="252" rx="8" class="dg-run"/>
+                  <text x="533" y="138" text-anchor="middle" class="dg-run-l">Cloud Run</text>
+                  <text x="533" y="158" text-anchor="middle" class="dg-ns">Next.js</text>
+                  <text x="533" y="175" text-anchor="middle" class="dg-ns">0〜2 インスタンス</text>
+
+                  <rect x="640" y="24" width="124" height="48" rx="6" class="dg-node"/>
+                  <text x="702" y="44" text-anchor="middle" class="dg-nl">Vertex AI</text>
+                  <text x="702" y="61" text-anchor="middle" class="dg-ns">Gemini 2.5 Flash</text>
+
+                  <rect x="640" y="126" width="124" height="48" rx="6" class="dg-node dg-ext"/>
+                  <text x="702" y="146" text-anchor="middle" class="dg-nl">Supabase</text>
+                  <text x="702" y="163" text-anchor="middle" class="dg-ns">DB・認証（GCP 外）</text>
+
+                  <rect x="640" y="228" width="124" height="48" rx="6" class="dg-node"/>
+                  <text x="702" y="257" text-anchor="middle" class="dg-nl">Secret Manager</text>
+
+                  <line x1="166" y1="48" x2="248" y2="48" class="dg-edge" marker-end="url(#ah)"/>
+                  <text x="207" y="40" text-anchor="middle" class="dg-el">WIF で push</text>
+
+                  <line x1="400" y1="48" x2="466" y2="48" class="dg-edge" marker-end="url(#ah)"/>
+                  <text x="433" y="40" text-anchor="middle" class="dg-el">イメージ取得</text>
+
+                  <line x1="166" y1="150" x2="466" y2="150" class="dg-edge" marker-end="url(#ah)"/>
+                  <text x="316" y="142" text-anchor="middle" class="dg-el">HTTPS（allUsers に公開）</text>
+
+                  <line x1="166" y1="252" x2="466" y2="252" class="dg-edge" marker-end="url(#ah)"/>
+                  <text x="316" y="244" text-anchor="middle" class="dg-el">OIDC トークン付き POST</text>
+
+                  <line x1="598" y1="48" x2="638" y2="48" class="dg-edge" marker-end="url(#ah)"/>
+                  <text x="619" y="40" text-anchor="middle" class="dg-el">ADC</text>
+
+                  <line x1="598" y1="150" x2="638" y2="150" class="dg-edge" marker-end="url(#ah)"/>
+
+                  <line x1="640" y1="252" x2="600" y2="252" class="dg-edge" marker-end="url(#ah)"/>
+                  <text x="619" y="244" text-anchor="middle" class="dg-el">起動時</text>
+                </svg>
+              </div>
+              <figcaption>3つの流れはすべて Cloud Run に集まります。デプロイの指示は GitHub Actions が出し、イメージは Cloud Run が Artifact Registry から取得します。点線の枠は GCP の外にあるサービスです。</figcaption>
+            </figure>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>サービス</th><th>ひとことで言うと</th><th>定義ファイル</th></tr></thead>
+                <tbody>
+                  <tr><td>Cloud Run</td><td>リクエストが来たときだけコンテナを動かす実行環境</td><td><code>cloud-run.tf</code></td></tr>
+                  <tr><td>Artifact Registry</td><td>Docker イメージの置き場</td><td><code>cloud-run.tf</code></td></tr>
+                  <tr><td>Secret Manager</td><td>APIキーなどの秘密情報をしまう金庫</td><td><code>secrets.tf</code></td></tr>
+                  <tr><td>Cloud Scheduler</td><td>クラウド版の cron</td><td><code>cloud-scheduler.tf</code></td></tr>
+                  <tr><td>IAM / サービスアカウント</td><td>誰に何を許すかの管理</td><td><code>iam.tf</code></td></tr>
+                  <tr><td>Workload Identity Federation</td><td>GitHub が鍵なしで GCP に入るための仕組み</td><td><code>workload-identity.tf</code></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p>データベースは GCP じゃないんですね。</p></div></div>
+
+          <div class="line e"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say"><p>そう、DB と認証は Supabase に任せている。GCP の担当は「アプリを動かす・秘密を守る・決まった時刻に叩く・AI を呼ぶ」の4つ。全部を GCP で揃える必要はないんだ。</p></div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p>プロジェクトとリージョンはどうなっていましたか？</p></div></div>
+
+          <div class="line e"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say"><p>プロジェクトは <code>ai-product-446711</code>、リージョンは東京の <code>asia-northeast1</code>。気をつけたいのは、<strong>このプロジェクトに別サービスの <code>ai-product</code> も同居していた</strong>こと。これが第9章の片付けで大きく効いてくる。</p></div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p><code>main.tf</code> の最初で API を有効化していますね。</p></div></div>
+
+          <div class="line e"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say">
+            <p>GCP にはサービスごとに API のオン/オフがあって、初期状態ではほとんどがオフ。だからまずオンにする。</p>
+            <figure class="snippet">
+              <figcaption>terraform/main.tf（抜粋）</figcaption>
+<pre><code>resource "google_project_service" "apis" {
+  for_each = toset([
+    "run.googleapis.com",
+    "cloudscheduler.googleapis.com",
+    "secretmanager.googleapis.com",
+    "aiplatform.googleapis.com",
+    <span class="c"># ほか4件</span>
+  ])
+  service            = each.value
+  disable_on_destroy = false
+}</code></pre>
+            </figure>
+            <p>大事なのは <code>disable_on_destroy = false</code>。これは「Terraform がこのリソースを消しても、API 自体はオフにしない」という意味。同居している <code>ai-product</code> も同じ API を使っているから、オフにすると隣のサービスまで止まってしまう。</p>
+          </div></div>
+        </div>
+      </section>
+
+      <!-- 第2章 -->
+      <section class="chapter" id="ch2">
+        <p class="eyebrow"><span>第2章</span><code>terraform/cloud-run.tf</code></p>
+        <h2>Cloud Run：「サーバーを持たない」ことの損と得</h2>
+        <div class="dialogue">
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p>Cloud Run と普通のサーバー（VM）は何が違うんですか？</p></div></div>
+
+          <div class="line e"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say">
+            <p>VM はアクセスがなくても24時間動いていて、その分お金がかかる。Cloud Run はリクエストが来たときにコンテナを起動して、来なくなったら止める。正確には、次のリクエストに備えてアイドルのインスタンスを最大15分ほど残してから止めるんだ。</p>
+            <figure class="snippet">
+              <figcaption>terraform/cloud-run.tf:33</figcaption>
+<pre><code>scaling {
+  min_instance_count = 0   <span class="c"># アクセスがなければ0台 = ほぼ無料</span>
+  max_instance_count = 2
+}</code></pre>
+            </figure>
+          </div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p>最大2台は少なすぎませんか？</p></div></div>
+
+          <div class="line e" id="n-maxinst"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say">
+            <p>このアプリにはちょうどいいんだ。Terraform でデプロイした Cloud Run は、1台あたり vCPU × 80 件のリクエストを同時に処理できる。ここは 1 vCPU だから、2台で同時に最大160件。個人の学習サービスには十分だよ。</p>
+            <p><span class="chip pit">落とし穴</span>ただし、これを<strong>請求額の上限</strong>だと思うのは間違い。上限を超えたリクエストはしばらく（10秒以上）待たされて、それでも空きがなければ 429 エラーになる。だから Gemini の課金が<strong>一気に膨らむのを抑えるブレーキ</strong>にはなるけど、処理できる範囲のアクセスが続けば請求は積み上がっていく。総額を抑えたいなら、予算アラートや API のクォータを組み合わせる。</p>
+          </div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p>0台から起動するときは遅くなりませんか？</p></div></div>
+
+          <div class="line e"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say">
+            <p>なるよ。これが<strong>コールドスタート</strong>。その対策として次の2行を入れている。</p>
+            <figure class="snippet">
+              <figcaption>terraform/cloud-run.tf:49</figcaption>
+<pre><code>cpu_idle          = true  <span class="c"># CPUを割り当てるのはリクエスト処理中と起動・停止時だけ（アイドル中は課金なし）</span>
+startup_cpu_boost = true  <span class="c"># 起動する瞬間だけCPUを増やし、立ち上がりを速くする</span></code></pre>
+            </figure>
+          </div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p><code>startup_probe</code> と <code>liveness_probe</code> がどちらも <code>/api/health</code> を見ているのはなぜですか？</p></div></div>
+
+          <div class="line e"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say">
+            <p>同じ URL でも目的が違う。</p>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>プローブ</th><th>いつ見るか</th><th>失敗したら</th></tr></thead>
+                <tbody>
+                  <tr><td><code>startup_probe</code></td><td>起動直後</td><td>成功するまでリクエストを流さない。期限（<code>failure_threshold</code> × <code>period_seconds</code>）内に成功しなければコンテナを停止する</td></tr>
+                  <tr><td><code>liveness_probe</code></td><td>startup の成功後、30秒ごと</td><td>失敗が続くと固まったとみなし、コンテナを SIGKILL で停止する。新しいインスタンスに置き換わる</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p><code>cloud-run.tf:160</code> の <code>ignore_changes</code> で image を無視しているのはなぜですか？</p></div></div>
+
+          <div class="line e"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say"><p>ここはよく出題されるポイントだね。イメージを更新するのは GitHub Actions の仕事。もし Terraform もイメージを管理していたら、<code>terraform apply</code> した瞬間に tfvars に書かれた古いタグへ戻ってしまう。<strong>どの属性をどのツールが管理するか</strong>を分けるための宣言なんだ。</p></div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p><code>cloud-run.tf:183</code> の <code>allUsers</code> は、誰でもアクセスできるということですか？</p></div></div>
+
+          <div class="line e"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say"><p>そう、インターネット上の全員に公開している。Web サイトだから公開するのは当然で、API の保護はアプリ側（Supabase Auth）でやる。<strong>インフラでは全部開けて、アプリで認証する</strong>という分担だ。これが第6章の伏線になる。</p></div></div>
+        </div>
+
+        <aside class="insight" aria-label="Insight">
+          <h3>Insight</h3>
+          <ul>
+            <li><code>max_instance_count</code> はスケールの設定であると同時に<strong>コストのブレーキ</strong>です。同時に処理できる量を抑えるので、従量課金の外部 API（ここでは Gemini）への請求が一気に膨らむのを防げます。ただし請求総額の上限ではないので、予算アラートと組み合わせます。</li>
+            <li><code>ignore_changes</code> は「Terraform で全部を管理する」考え方への例外です。CI/CD が頻繁に書き換える属性は、Terraform から外して管理者を1つに絞るのが定石です。</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- 第3章 -->
+      <section class="chapter" id="ch3">
+        <p class="eyebrow"><span>第3章</span><code>terraform/cloud-run.tf</code><code>web/Dockerfile</code></p>
+        <h2>Artifact Registry と Dockerfile</h2>
+        <div class="dialogue">
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p>Artifact Registry は、プライベートな Docker Hub のようなものですか？</p></div></div>
+
+          <div class="line e"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say">
+            <p>その理解で合っている。イメージの住所はこういう形になる。</p>
+            <div class="addr" role="group" aria-label="イメージURLの構成">
+              <div class="seg"><code>asia-northeast1-docker.pkg.dev</code><span>リージョンのレジストリ</span></div>
+              <span class="sep">/</span>
+              <div class="seg"><code>ai-product-446711</code><span>プロジェクト</span></div>
+              <span class="sep">/</span>
+              <div class="seg"><code>kabu-news-ai</code><span>リポジトリ</span></div>
+              <span class="sep">/</span>
+              <div class="seg"><code>app</code><span>イメージ名</span></div>
+              <span class="sep">:</span>
+              <div class="seg"><code>&lt;コミットSHA&gt;</code><span>タグ</span></div>
+            </div>
+          </div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p>タグに <code>latest</code> を使わないんですか？</p></div></div>
+
+          <div class="line e"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say">
+            <p><code>variables.tf:33</code> で、Terraform に渡すタグとしての <code>latest</code> を<strong>バリデーションで禁止</strong>している。CI は SHA と一緒に <code>latest</code> タグも付けているけど、デプロイと Terraform で指定するのは SHA だけだ。</p>
+            <figure class="snippet">
+              <figcaption>terraform/variables.tf:33</figcaption>
+<pre><code>condition = length(var.app_image_tag) &gt; 0 &amp;&amp; var.app_image_tag != "latest"</code></pre>
+            </figure>
+            <p>誤解しやすいのが「<code>latest</code> だと元に戻せない」という話。Cloud Run はデプロイした時点でタグをイメージのダイジェスト（中身のハッシュ）に置き換えて、リビジョンに固定する。だから前のリビジョンに戻すことはできる。本当の問題は Terraform 側にある。<code>latest</code> という文字列は変わらないから、新しいイメージを push しても plan に差分が出ず、デプロイのきっかけにならない。それにタグ名を見ても、どのコミットかが分からない。SHA ならコードとイメージが1対1で対応する。</p>
+          </div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p><code>web/Dockerfile</code> は3段構成になっていますね。</p></div></div>
+
+          <div class="line e"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say">
+            <p>マルチステージビルドだね。</p>
+            <ol>
+              <li><strong>deps</strong>：依存パッケージだけをインストールする。<code>package.json</code> と <code>pnpm-lock.yaml</code> が変わらなければキャッシュが効く</li>
+              <li><strong>builder</strong>：ソースをコピーして <code>pnpm build</code> を実行する</li>
+              <li><strong>runner</strong>：Next.js の standalone 出力だけをコピーし、非 root の <code>nextjs</code> ユーザーで起動する</li>
+            </ol>
+            <p>最終イメージにソースも開発用パッケージも入らないから小さくなって、転送も起動も速くなる。</p>
+          </div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p>上級者として、何か反省点はありますか？</p></div></div>
+
+          <div class="line e" id="n-ar-cleanup"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say"><p><span class="chip fix">改善点</span>片付けのときに分かったんだけど、<strong>Artifact Registry に 6.0 GiB もたまっていた</strong>。コミットごとにイメージを push していて、古いものを消すクリーンアップポリシーを設定していなかったからだ。ストレージは少しずつ課金されるから、作るときに <code>cleanup_policies</code> で「最新 N 個だけ残す」と決めておくべきだった。</p></div></div>
+        </div>
+      </section>
+
+      <!-- 第4章 -->
+      <section class="chapter" id="ch4">
+        <p class="eyebrow"><span>第4章</span><code>terraform/secrets.tf</code></p>
+        <h2>Secret Manager：秘密の渡し方は3種類ある</h2>
+        <div class="dialogue">
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p>Supabase のキーはどうやってアプリに渡していたんですか？</p></div></div>
+
+          <div class="line e"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say">
+            <p>Cloud Run が起動するときに Secret Manager から読み込んで、環境変数に入れている。</p>
+            <figure class="snippet">
+              <figcaption>terraform/cloud-run.tf:97</figcaption>
+<pre><code>env {
+  name = "SUPABASE_SERVICE_ROLE_KEY"
+  value_source {
+    secret_key_ref {
+      secret  = google_secret_manager_secret.supabase_service_role_key.secret_id
+      version = "latest"
+    }
+  }
+}</code></pre>
+            </figure>
+          </div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p><code>secrets.tf</code> には値が書かれていませんが？</p></div></div>
+
+          <div class="line e"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say"><p>わざとだよ。Terraform が作るのは<strong>入れ物（Secret）だけ</strong>で、値は <code>gcloud secrets versions add</code> で手で登録する。値を Terraform に書くと state ファイルに<strong>平文で残る</strong>からね。</p></div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p>IAM の付与が Secret ごとに4つも並んでいて、冗長に見えます。</p></div></div>
+
+          <div class="line e"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say"><p>「Secret Manager 全体を読める」権限をまとめて渡すこともできる。でもそうすると、後から追加した Secret までアプリが読めてしまう。1つずつ付けておけば、<strong>新しい Secret はデフォルトで読めない</strong>状態になる。冗長さと引き換えに安全を買っているんだ。</p></div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p><code>version = "latest"</code> なら、値を更新すればすぐに反映されますか？</p></div></div>
+
+          <div class="line e" id="n-secret-latest"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say">
+            <p><span class="chip pit">落とし穴</span>されない。環境変数として渡す Secret は、インスタンスが起動したときに読み込まれる。だから、すでに動いているインスタンスは古い値のまま。確実に反映させたいなら、新しいリビジョンをデプロイする必要がある。</p>
+            <p><span class="chip fix">改善点</span>この性質があるので、Google は環境変数で使う Secret には <code>latest</code> ではなく<strong>バージョンを固定する</strong>ことを推奨している。常に最新の値を使いたいなら、Secret をファイルとしてマウントする方法がある。こちらは読むたびに Secret Manager から最新の値を取ってくる。</p>
+          </div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p>秘密の渡し方が3種類あるというのは？</p></div></div>
+
+          <div class="line e"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say">
+            <p>いつ必要になるか、誰に見えてよいかで経路を分けている。</p>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>種類</th><th>例</th><th>渡し方</th></tr></thead>
+                <tbody>
+                  <tr><td>実行時の秘密</td><td><code>SUPABASE_SERVICE_ROLE_KEY</code></td><td>Secret Manager → Cloud Run の環境変数</td></tr>
+                  <tr><td>ビルド時の秘密</td><td>同じキー（ビルド中に使う分）</td><td>BuildKit の <code>--mount=type=secret</code>。そのコマンドの実行中だけ見え、イメージに残らない</td></tr>
+                  <tr><td>ビルド時の公開値</td><td><code>NEXT_PUBLIC_*</code></td><td>Docker の <code>ARG</code>。ブラウザに配られる値なので秘密ではない</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div></div>
+        </div>
+      </section>
+
+      <!-- 第5章 -->
+      <section class="chapter" id="ch5">
+        <p class="eyebrow"><span>第5章</span><code>terraform/iam.tf</code></p>
+        <h2>IAM とサービスアカウント：「誰が」「何を」「どこで」</h2>
+        <div class="dialogue">
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p>サービスアカウントは何のためにあるんですか？</p></div></div>
+
+          <div class="line e"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say">
+            <p>プログラム用のアカウントだよ。このアプリには3つあって、それぞれ役割が1つずつ決まっている。</p>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>サービスアカウント</th><th>使う人</th><th>権限</th></tr></thead>
+                <tbody>
+                  <tr><td><code>cloud-run-app</code></td><td>アプリ本体</td><td>Vertex AI の利用、各 Secret の読み取り</td></tr>
+                  <tr><td><code>api-scheduler</code></td><td>Cloud Scheduler</td><td>Cloud Run の呼び出しだけ</td></tr>
+                  <tr><td><code>github-actions-deploy</code></td><td>GitHub Actions</td><td>イメージの push、デプロイ、<code>cloud-run-app</code> として振る舞う権限</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p>ここで上級者向けの観点を1つ。IAM は<strong>どこに付けるか（スコープ）</strong>も設計の一部なんだ。</p>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>ロール</th><th>付与した単位</th></tr></thead>
+                <tbody>
+                  <tr><td><code>aiplatform.user</code></td><td>プロジェクト（<code>iam.tf:13</code>）</td></tr>
+                  <tr><td><code>secretmanager.secretAccessor</code></td><td>Secret 1つ</td></tr>
+                  <tr><td><code>artifactregistry.writer</code></td><td>リポジトリ1つ</td></tr>
+                  <tr><td><code>run.invoker</code> / <code>run.developer</code></td><td>Cloud Run サービス1つ</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p>プロジェクト単位で付けるのが楽だけど、同居プロジェクトでそれをやると <code>ai-product</code> のリソースまで触れてしまう。リソース単位で付けておいたおかげで、2つのサービスの境界が IAM で守られていたんだ。</p>
+          </div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p><code>workload-identity.tf:91</code> の <code>serviceAccountUser</code> は何ですか？</p></div></div>
+
+          <div class="line e"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say"><p>「この SA として振る舞ってよい」という権限（actAs）だよ。GitHub Actions が「<code>cloud-run-app</code> として動く Cloud Run」をデプロイするには、自分が <code>cloud-run-app</code> として振る舞えなければならない。これがないと、弱い SA が強い SA を指定したサービスをデプロイして<strong>権限を奪う</strong>ことができてしまう。それを防ぐための関所なんだ。</p></div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p>Vertex AI の API キーはどこにあるんですか？</p></div></div>
+
+          <div class="line e"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say">
+            <p><strong>ない</strong>んだ。コードは <code>vertexai: true</code> とプロジェクトIDを渡しているだけ。</p>
+            <figure class="snippet">
+              <figcaption>web/src/shared/api/gemini/client.ts:4</figcaption>
+<pre><code>export const ai = new GoogleGenAI({
+  vertexai: true,
+  project: process.env.GCP_PROJECT_ID!,
+  location: process.env.GOOGLE_CLOUD_LOCATION ?? "asia-northeast1",
+});</code></pre>
+            </figure>
+            <p>認証は <strong>ADC（Application Default Credentials）</strong> が環境に合わせて自動で選ぶ。</p>
+            <ul>
+              <li>Cloud Run 上：メタデータサーバーが <code>cloud-run-app</code> のトークンを渡す</li>
+              <li>ローカル：<code>gcloud auth application-default login</code> で登録した開発者本人の認証情報を使う</li>
+            </ul>
+            <p>コードは同じで、<strong>認証情報を環境が決める</strong>。漏れる鍵がそもそも存在しないのが一番強い。<code>iam.tf:30</code> の <code>serviceAccountTokenCreator</code> は、開発者がローカルで <code>cloud-run-app</code> になりすまして、本番と同じ権限で試すためのものだよ。</p>
+          </div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p>Search Console と GA4 も ADC ですか？</p></div></div>
+
+          <div class="line e" id="n-gsc-iam"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say"><p><span class="chip pit">落とし穴</span>そう。ただしこの2つは <strong>GCP の IAM の外側に権限がある</strong>。それぞれの管理画面で SA のメールアドレスをユーザーとして追加しないと、IAM をいくら付けても 403 が返ってくる。</p></div></div>
+        </div>
+
+        <aside class="insight" aria-label="Insight">
+          <h3>Insight</h3>
+          <ul>
+            <li>この構成（kabu-news-ai の Terraform と CI）は、<strong>SA キー（JSON ファイル）を1つも使っていません</strong>。Cloud Run は ADC、CI は WIF、ローカルは gcloud となりすましを使っています。漏れる鍵を持たないことは、とても効果的な漏洩対策です。</li>
+            <li>同じプロジェクトに複数のサービスがあるときは、ロールを<strong>リソース単位で付けること</strong>がサービス間の境界になります。第9章で安全に削除できたのも、この分離があったからです。</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- 第6章 -->
+      <section class="chapter" id="ch6">
+        <p class="eyebrow"><span>第6章</span><code>terraform/cloud-scheduler.tf</code></p>
+        <h2>Cloud Scheduler と OIDC：決まった時刻に叩く仕組みを守る</h2>
+        <div class="dialogue">
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p>毎朝9時の予測トレーニング生成はどう動いていたんですか？</p></div></div>
+
+          <div class="line e"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say">
+            <p>Cloud Scheduler が9時に <code>/api/cron/generate-prediction</code> へ POST を送るだけだよ。<code>time_zone = "Asia/Tokyo"</code> を忘れると UTC で解釈されて、9時間ずれるから注意。</p>
+            <figure class="snippet">
+              <figcaption>terraform/cloud-scheduler.tf（抜粋）</figcaption>
+<pre><code>resource "google_cloud_scheduler_job" "prediction_generator" {
+  schedule  = "0 9 * * *"     <span class="c"># 毎日 9:00</span>
+  time_zone = "Asia/Tokyo"
+  paused    = true            <span class="c"># サービス終了で停止</span>
+
+  http_target {
+    uri         = "${google_cloud_run_v2_service.app.uri}/api/cron/generate-prediction"
+    http_method = "POST"
+    oidc_token {
+      service_account_email = google_service_account.scheduler.email
+      audience              = google_cloud_run_v2_service.app.uri
+    }
+  }
+
+  retry_config {
+    retry_count = 2
+  }
+}</code></pre>
+            </figure>
+          </div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p>でも Cloud Run は <code>allUsers</code> で公開されていましたよね。誰でもその URL を叩けるのでは？</p></div></div>
+
+          <div class="line e"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say">
+            <p>鋭いね。叩けてしまうと、他人がこちらの Gemini 課金を勝手に発生させられる。だから <code>oidc_token</code> で、Scheduler は「私は <code>api-scheduler</code> です」という <strong>Google が署名した身分証</strong>を添えて送る。そしてアプリ側で検証する。</p>
+            <figure class="snippet">
+              <figcaption>web/src/shared/lib/verify-scheduler-token.ts:21</figcaption>
+<pre><code>const ticket = await client.verifyIdToken({ idToken: token });
+const payload = ticket.getPayload();
+return payload?.email === schedulerEmail &amp;&amp; payload?.email_verified === true;</code></pre>
+            </figure>
+            <ol>
+              <li>Google の正しい署名があるか → 偽造トークンを弾く</li>
+              <li><code>email</code> が <code>api-scheduler@…</code> 本人か → 他人の正規トークンを弾く</li>
+            </ol>
+          </div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p><code>iam.tf:19</code> の <code>scheduler_invoker</code> で Cloud Run の呼び出しを許可しているのは、Scheduler 用の門番ではないんですか？</p></div></div>
+
+          <div class="line e" id="n-invoker"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say"><p><span class="chip pit">落とし穴</span>ここが上級者向けのポイント。<strong><code>allUsers</code> にすでに <code>run.invoker</code> があるから、このバインディングは今は門番として働いていない</strong>。コメントには「これがないと呼び出せない」と書いてあるけど、公開サービスである限りそうはならない。本当の門番はアプリの <code>verifySchedulerToken</code> だ。このバインディングが意味を持つのは、Cloud Run を非公開にしたときだね。</p>
+            <p>ただし、非公開にするなら<strong>アプリ側の検証も変える必要がある</strong>。認証が必要なサービスでは、Cloud Run が IAM でトークンを検証したあと、使い回しを防ぐために<strong>署名を取り除いてから</strong>コンテナに渡す。すると今の <code>verifyIdToken</code> は、署名の検証で必ず失敗する。非公開にするなら、検証は IAM に任せて、アプリはトークンの中身（<code>email</code>）を読むだけ、という形に変えることになる。</p>
+          </div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p>検証コードに改善できるところはありますか？</p></div></div>
+
+          <div class="line e" id="n-audience"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say"><p><span class="chip fix">改善点</span>ある。<code>verifyIdToken({ idToken })</code> に <strong><code>audience</code> を渡していない</strong>から、トークンの宛先（aud）を確認していない。Terraform では <code>audience = Cloud Run の URI</code> と設定しているんだから、アプリ側でも照合するのが正しい形だ。持ち主が <code>api-scheduler</code> に限られているので実害は小さいけど、多層防御としては穴になっている。</p></div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p>ジョブがすべて <code>paused = true</code> になっていますね。</p></div></div>
+
+          <div class="line e" id="n-drift"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say"><p><span class="chip pit">落とし穴</span>サービス終了のときに Gemini の課金を止めたんだ。<code>gcloud scheduler jobs pause</code> で止めて、コードにも <code>paused = true</code> を書いた。ここは誤解しやすいところで、<code>paused</code> は <strong>Optional＋Computed</strong> という種類の属性だから、コードに書かなくても <code>apply</code> で ENABLED に戻ることはない。コードに書かれていない属性は、実際の値をそのまま受け入れるんだ。</p><p>それでも書いておく意味は、ジョブが<strong>作り直されたとき</strong>にも停止状態で作られること。<code>.tf</code> が残っているから、誰かが <code>apply</code> すればジョブは新しく作られうる。コードに書かない属性がどう扱われるかはプロバイダのスキーマで決まるから、「手で変えたら必ず巻き戻る」と思い込まずに、属性ごとに確かめるのが大事だよ。</p></div></div>
+        </div>
+      </section>
+
+      <!-- 第7章 -->
+      <section class="chapter" id="ch7">
+        <p class="eyebrow"><span>第7章</span><code>terraform/workload-identity.tf</code><code>.github/workflows/deploy.yml</code></p>
+        <h2>Workload Identity Federation：鍵を渡さない CI/CD</h2>
+        <div class="dialogue">
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p>GitHub Actions はどうやって GCP にログインしていたんですか？</p></div></div>
+
+          <div class="line e"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say">
+            <p>昔は SA キーの JSON を GitHub Secrets に入れていた。でも漏れたらそれで終わりの合鍵を外に預けることになる。WIF では、合鍵の代わりに<strong>その都度発行される身分証</strong>を使う。</p>
+            <ol>
+              <li>GitHub が「このジョブは <code>Takeshi-005/kabu-news-ai</code> で動いています」という OIDC トークンを発行する（<code>deploy.yml:41</code> の <code>id-token: write</code> が許可）</li>
+              <li>Google の Security Token Service が、<strong>Pool</strong>（受付）と <strong>Provider</strong>（GitHub を信頼する設定）に従ってトークンを検証し、短期のトークンに交換する</li>
+              <li>検証に通ると <code>github-actions-deploy</code> SA として動けるようになる</li>
+            </ol>
+          </div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p><code>attribute_condition</code> がないとどうなりますか？</p></div></div>
+
+          <div class="line e" id="n-repo-id"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say">
+            <figure class="snippet">
+              <figcaption>terraform/workload-identity.tf:47</figcaption>
+<pre><code>attribute_condition = "assertion.repository == '${var.github_repository}'"</code></pre>
+            </figure>
+            <p>他のリポジトリのトークンでも、受付（プールでのトークン交換）を通れてしまう。この構成では SA 側のバインディングでも <code>principalSet://…/attribute.repository/Takeshi-005/kabu-news-ai</code> と絞っているから、それだけで SA を借りられるわけではない。つまりこの1行は、二重の鍵の1つ目だ。GitHub のトークンの発行元は全リポジトリで共通だから、Google のドキュメントもこういう場合は attribute condition を<strong>必ず使う</strong>よう求めている。</p>
+            <p><span class="chip fix">改善点</span>さらに言うと、リポジトリの<strong>名前</strong>で絞るより <code>assertion.repository_id</code>（数値ID）で絞るほうが強い。名前は削除や改名のあと他人に取り直される可能性があるけど、ID は再利用されないからね。</p>
+          </div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p>PR でもビルドは走るんですか？</p></div></div>
+
+          <div class="line e"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say"><p>走るけど <code>push: ${{ github.event_name == 'push' }}</code> だから push はしない。マージしてからビルドが壊れていると気づく、という事故を防ぐためだ。<code>terraform/</code> を変えた PR では <code>terraform-plan.yml</code> が plan の結果を PR にコメントする。<strong>apply の前に差分をレビューする</strong>という流れだね。</p></div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p>その plan はちゃんと動いていたんですか？</p></div></div>
+
+          <div class="line e" id="n-planci"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say"><p><span class="chip pit">落とし穴</span>それが、2026-07-02 以降はずっと失敗していたんだ。キャンセルされた plan がロックを残して、それ以降の PR ではロックを取れずに終わっていた。それでも結果は success と表示された。<code>terraform plan … | tee plan.txt</code> とパイプすると、パイプ全体の終了コードは最後の <code>tee</code> の 0 になるからね。GitHub Actions の既定のシェルは <code>pipefail</code> を有効にしない（<code>shell: bash</code> と明示すると有効になる）。<strong>緑のチェックは、失敗していないことの証明にはならない</strong>んだ。</p></div></div>
+        </div>
+      </section>
+
+      <!-- 第8章 -->
+      <section class="chapter" id="ch8">
+        <p class="eyebrow"><span>第8章</span><code>terraform/backend.tf</code></p>
+        <h2>Terraform の state</h2>
+        <div class="dialogue">
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p>state はどこに置いてあったんですか？</p></div></div>
+
+          <div class="line e"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say">
+            <p>GCS バケット <code>ai-product-446711-terraform-state</code> だよ。<code>backend.tf</code> は中身が空で、外から渡す <strong>partial configuration</strong> にしている。文書では prefix を <code>kabu-news-ai</code> にする決まりだったんだけど、実際の state はバケット直下（prefix なし）にあった。</p>
+            <figure class="snippet">
+              <figcaption>初期化コマンド（実際の state の場所に合わせた形）</figcaption>
+<pre><code>terraform init \
+  -backend-config="bucket=ai-product-446711-terraform-state"</code></pre>
+            </figure>
+          </div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p>決まりと実際がずれたのはどうしてですか？</p></div></div>
+
+          <div class="line e" id="n-prefix"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say"><p><span class="chip pit">落とし穴</span>2026-02-19 に、ローカルで prefix を付けずに <code>init</code> したからなんだ。<code>prefix</code> は省略できる設定で、付け忘れてもエラーにならず、バケット直下が使われる。以降の <code>apply</code> も、停止のときの <code>state rm</code> も直下に書かれて、prefix 側には2月の古い state が残り続けた。その古い state にはシークレットが6件、平文で入っていたから、2026-09-24 に削除したよ。</p><p>部分設定は便利だけど、<strong>渡し忘れた値は黙って既定値になる</strong>。state を触る前に、<code>.terraform/terraform.tfstate</code> に記録された backend の設定を確かめる習慣をつけよう。</p></div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p>state が消えたらどうなりますか？</p></div></div>
+
+          <div class="line e"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say"><p>Terraform は「自分が何を作ったか」を忘れる。実際のリソースは残っているのに、<code>apply</code> すると全部新しく作ろうとして衝突する。だからローカルではなく、ロックがかかる GCS に置くんだ。</p></div></div>
+        </div>
+      </section>
+
+      <!-- 第9章 -->
+      <section class="chapter" id="ch9">
+        <p class="eyebrow"><span>第9章</span><code>docs/shutdown/SHUTDOWN_CHECKLIST.md</code></p>
+        <h2>片付け編：同居プロジェクトの安全な撤収</h2>
+        <div class="dialogue">
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p>削除は <code>terraform destroy</code> で一発ですか？</p></div></div>
+
+          <div class="line e"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say">
+            <p><strong>このプロジェクトでは禁止</strong>。同居している <code>ai-product</code> の資産まで巻き込む恐れがあるからだ。実際の手順はこうだった。</p>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>順</th><th>やったこと</th><th>ポイント</th></tr></thead>
+                <tbody>
+                  <tr><td class="num">1</td><td>Scheduler を停止</td><td>課金を止める。<strong>元に戻せる</strong>操作を最初に</td></tr>
+                  <tr><td class="num">2</td><td>GSC 16ヶ月分と Supabase のデータを退避</td><td>取り返しがつかないものから先に確保</td></tr>
+                  <tr><td class="num">3</td><td><code>money-nav.com</code> を Firebase Hosting へ移す</td><td><strong>DNS-01 チャレンジ</strong>で先に証明書を取り、停止時間ゼロで切り替え</td></tr>
+                  <tr><td class="num">4</td><td>名前を指定してリソースを個別に削除</td><td>保護リストとの部分一致でガードする</td></tr>
+                  <tr><td class="num">5</td><td><code>terraform state rm</code> で26件を state から外す</td><td>API 有効化の9件は <code>ai-product</code> が使っているので残す</td></tr>
+                  <tr><td class="num">6</td><td>リポジトリをアーカイブ</td><td><code>.tf</code> が残っているので、<code>apply</code> すると作り直しが始まる（イメージがないので Cloud Run の作成で失敗し、途中で止まる）。read-only 化が最後の安全装置</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p>削除の順番にも決まりがあるんですか？</p></div></div>
+
+          <div class="line e" id="n-order"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say">
+            <p><span class="chip pit">落とし穴</span>ある。</p>
+            <ul>
+              <li><strong>ドメインマッピング → Cloud Run</strong> の順。逆にすると、マッピングだけが行き先のない状態で残ってしまう（孤児化）</li>
+              <li><strong>IAM バインディング → SA</strong> の順。逆にすると、ポリシーに <code>deleted:serviceAccount:…?uid=…</code> という残骸が残る。GCP が最大60日で自動的に消すけど、先にバインディングを外せば、その場できれいになる</li>
+            </ul>
+            <p>それから、紛らわしい名前が並んでいた。WIF プールの <code>my-pool</code>（別リポジトリ用で保護）と <code>github-actions-pool</code>（削除対象）、プロバイダの <code>github-actions-oidc</code>（保護）と <code>github-provider</code>（削除対象）。名前のガードだけでは依存関係の見落としは防げないから、削除の前に「その SA を実際に使っているのは誰か」を <code>gcloud run services describe</code> で確認した。</p>
+          </div></div>
+
+          <div class="line b"><span class="who who-b" role="img" aria-label="初級者"><span class="wakaba"></span></span><div class="say"><p>DNS ゾーンは消さなかったんですか？</p></div></div>
+
+          <div class="line e"><span class="who who-e" role="img" aria-label="上級者">上</span><div class="say"><p>消していない。<code>google-site-verification</code> の TXT レコードが Search Console の所有権を支えているし、ドメインは次のプロダクトで使い回す予定だからね。<strong>作るより消すほうが、依存関係の理解を問われる</strong>。これがこの章の教訓だ。</p></div></div>
+        </div>
+
+        <aside class="insight" aria-label="Insight">
+          <h3>Insight</h3>
+          <ul>
+            <li>片付けは「元に戻せる操作 → 取り返しのつかないデータの確保 → 取り返しのつかない削除」の順に進めるのが原則です。Scheduler の停止が最初、<code>state rm</code> とアーカイブが最後だったのはそのためです。</li>
+            <li>Terraform の <code>.tf</code> と state、そして実際のリソースは、それぞれ別の状態を持ちます。「state から外した ≠ 実体を消した」「実体を消した ≠ <code>.tf</code> から消えた」を区別できると、Terraform の理解が一段深まります。</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- 理解度チェック -->
+      <section class="chapter" id="quiz">
+        <p class="eyebrow"><span>復習</span></p>
+        <h2>理解度チェック</h2>
+        <p class="section-lede">答えはすべて本文にあります。自分の言葉で答えてから解答例を開いてください。</p>
+        <ol class="quiz">
+          <li>
+            <div class="q-body">
+              <p><code>/api/cron/generate-prediction</code> に攻撃者が直接 POST したら、どこで・なぜ弾かれるでしょうか？（<code>allUsers</code> と <code>scheduler_invoker</code> の関係を踏まえて）</p>
+              <details>
+                <summary>解答例を見る</summary>
+                <div class="answer">
+                  <p>Cloud Run は <code>allUsers</code> に <code>run.invoker</code> を与えているので、リクエストはインフラ層では止まらずアプリまで届きます。<code>scheduler_invoker</code> はここでは効いていません。</p>
+                  <p>弾くのはルートハンドラ冒頭の <code>verifySchedulerToken</code> で、<strong>401 Unauthorized</strong> が返ります。Bearer トークンがなければその場で不合格、偽造トークンは Google 署名の検証で失敗、別の SA の正規トークンは <code>email</code> が <code>api-scheduler@…</code> と一致せず失敗します。</p>
+                </div>
+              </details>
+            </div>
+          </li>
+          <li>
+            <div class="q-body">
+              <p><code>cloud-run.tf</code> から <code>ignore_changes</code> の image を消して <code>terraform apply</code> すると、何が起きるでしょうか？</p>
+              <details>
+                <summary>解答例を見る</summary>
+                <div class="answer">
+                  <p>GitHub Actions がデプロイした最新イメージ（コミットSHA）と、tfvars の <code>app_image_tag</code>（古い値）の差分を Terraform が検出し、plan に image の変更が出ます。</p>
+                  <p>そのまま apply すると古いイメージで新しいリビジョンが作られ、<strong>本番が過去のバージョンに巻き戻ります</strong>。</p>
+                </div>
+              </details>
+            </div>
+          </li>
+          <li>
+            <div class="q-body">
+              <p><code>github-actions-deploy</code> から <code>serviceAccountUser</code> を外すと、デプロイのどの段階で失敗するでしょうか？そして、それはなぜ必要な制約なのでしょうか？</p>
+              <details>
+                <summary>解答例を見る</summary>
+                <div class="answer">
+                  <p>イメージのビルドと push は <code>artifactregistry.writer</code> で通ります。失敗するのは deploy ジョブの Cloud Run 更新で、<code>iam.serviceAccounts.actAs</code> の権限不足エラーになります。</p>
+                  <p><code>run.developer</code> だけでサービスを作れると、強い権限の SA を指定したサービスをデプロイし、その SA の権限で任意のコードを動かせてしまいます（権限昇格）。actAs を要求することで、「その SA として振る舞ってよい人」だけがその SA を使うサービスを作れるようになります。</p>
+                </div>
+              </details>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <!-- 索引 -->
+      <section class="chapter" id="index">
+        <p class="eyebrow"><span>索引</span></p>
+        <h2>改善点・落とし穴の索引</h2>
+        <p class="section-lede">本文でラベルを付けた箇所の一覧です。次に GCP で構成を組むときのチェックリストとして使えます。</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>種別</th><th>内容</th><th>場所</th></tr></thead>
+            <tbody>
+              <tr><td><span class="chip pit">落とし穴</span></td><td><code>max_instance_count</code> は同時処理量の上限で、請求総額の上限ではない</td><td><a href="#n-maxinst">第2章</a></td></tr>
+              <tr><td><span class="chip fix">改善点</span></td><td>Artifact Registry にクリーンアップポリシーがなく、6.0 GiB たまっていた</td><td><a href="#n-ar-cleanup">第3章</a></td></tr>
+              <tr><td><span class="chip pit">落とし穴</span></td><td>Secret の <code>latest</code> は起動時に解決される。動作中のインスタンスには反映されない</td><td><a href="#n-secret-latest">第4章</a></td></tr>
+              <tr><td><span class="chip fix">改善点</span></td><td>環境変数で使う Secret は <code>latest</code> ではなくバージョンを固定する（Google 推奨）</td><td><a href="#n-secret-latest">第4章</a></td></tr>
+              <tr><td><span class="chip pit">落とし穴</span></td><td>Search Console / GA4 の権限は GCP の IAM の外側にある</td><td><a href="#n-gsc-iam">第5章</a></td></tr>
+              <tr><td><span class="chip pit">落とし穴</span></td><td><code>allUsers</code> がある限り、<code>scheduler_invoker</code> は門番として効かない</td><td><a href="#n-invoker">第6章</a></td></tr>
+              <tr><td><span class="chip pit">落とし穴</span></td><td>非公開のサービスでは Cloud Run がトークンの署名を取り除くので、アプリ側で署名を検証できなくなる</td><td><a href="#n-invoker">第6章</a></td></tr>
+              <tr><td><span class="chip fix">改善点</span></td><td><code>verifyIdToken</code> に <code>audience</code> を渡していない</td><td><a href="#n-audience">第6章</a></td></tr>
+              <tr><td><span class="chip pit">落とし穴</span></td><td><code>paused</code> は Optional＋Computed。書かなくても <code>apply</code> で ENABLED には戻らないが、書いておくと作り直したときも停止状態で作られる</td><td><a href="#n-drift">第6章</a></td></tr>
+              <tr><td><span class="chip fix">改善点</span></td><td>WIF の条件はリポジトリ名より <code>repository_id</code> で絞る</td><td><a href="#n-repo-id">第7章</a></td></tr>
+              <tr><td><span class="chip pit">落とし穴</span></td><td><code>| tee</code> でパイプすると終了コードが消え、失敗した plan が success と表示される</td><td><a href="#n-planci">第7章</a></td></tr>
+              <tr><td><span class="chip pit">落とし穴</span></td><td>backend の <code>prefix</code> を付け忘れてもエラーにならず、バケット直下に state ができる</td><td><a href="#n-prefix">第8章</a></td></tr>
+              <tr><td><span class="chip pit">落とし穴</span></td><td>削除順：ドメインマッピング → Cloud Run、IAM バインディング → SA</td><td><a href="#n-order">第9章</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <footer>
+        <p>関連資料：<a href="./GCP_SYSTEM_LEARNING.md">GCP_SYSTEM_LEARNING.md</a>（網羅的な解説と演習）、<a href="./TERRAFORM_LEARNING.md">TERRAFORM_LEARNING.md</a>（コードの書き方の側から）</p>
+        <p>2026-09-23 作成。行番号は作成時点の <code>main</code> ブランチのものです。</p>
+      </footer>
+    </article>
+  </div>
+</div>
+
+<script>
+(() => {
+  const links = Array.from(document.querySelectorAll('.toc a'));
+  const byId = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+  const sections = Array.from(document.querySelectorAll('article > section[id]'));
+  if (!('IntersectionObserver' in window) || sections.length === 0) return;
+
+  const setCurrent = id => {
+    links.forEach(a => a.removeAttribute('aria-current'));
+    const link = byId.get(id);
+    if (link) link.setAttribute('aria-current', 'true');
+  };
+
+  const observer = new IntersectionObserver(entries => {
+    const visible = entries.filter(e => e.isIntersecting)
+      .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+    if (visible.length > 0) setCurrent(visible[0].target.id);
+  }, { rootMargin: '-15% 0px -70% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+})();
+</script>
+</body>
+</html>

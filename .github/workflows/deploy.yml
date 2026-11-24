@@ -1,0 +1,119 @@
+name: Deploy to Cloud Run
+
+# 2026-08-18 にサービスを終了し、デプロイ先の GCP リソースは削除済み。
+# 自動では動かないよう、手動実行（workflow_dispatch）だけにしている。
+# 稼働当時は main への push と pull_request で動いていた。
+on:
+  workflow_dispatch:
+
+# 同一ブランチでの並列実行を防止（古いワークフローをキャンセル）
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PROJECT_ID: ai-product-446711
+  REGION: asia-northeast1
+  SERVICE_NAME: kabu-news-ai
+  IMAGE_URL: asia-northeast1-docker.pkg.dev/ai-product-446711/kabu-news-ai/app
+
+jobs:
+  # ===========================================
+  # ビルドジョブ（PR・push両方で実行）
+  # ===========================================
+  build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # WIF認証に必須
+
+    outputs:
+      image_tag: ${{ steps.tag.outputs.IMAGE_TAG }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Generate image tag
+        id: tag
+        run: echo "IMAGE_TAG=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: "projects/${{ secrets.GCP_PROJECT_NUMBER }}/locations/global/workloadIdentityPools/github-actions-pool/providers/github-provider"
+          service_account: "github-actions-deploy@${{ env.PROJECT_ID }}.iam.gserviceaccount.com"
+          token_format: "access_token"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Artifact Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGION }}-docker.pkg.dev
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: ./web
+          platforms: linux/amd64
+          push: ${{ github.event_name == 'push' }}
+          tags: |
+            ${{ env.IMAGE_URL }}:${{ steps.tag.outputs.IMAGE_TAG }}
+            ${{ env.IMAGE_URL }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+            NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+            NEXT_PUBLIC_APP_URL=${{ secrets.NEXT_PUBLIC_APP_URL }}
+          secrets: |
+            "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}"
+
+  # ===========================================
+  # デプロイジョブ（mainへのpush時のみ）
+  # ===========================================
+  deploy:
+    name: Deploy to Cloud Run
+    needs: build
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # WIF認証に必須
+
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.url }}
+
+    steps:
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: "projects/${{ secrets.GCP_PROJECT_NUMBER }}/locations/global/workloadIdentityPools/github-actions-pool/providers/github-provider"
+          service_account: "github-actions-deploy@${{ env.PROJECT_ID }}.iam.gserviceaccount.com"
+
+      - name: Deploy to Cloud Run
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun@v3
+        with:
+          service: ${{ env.SERVICE_NAME }}
+          region: ${{ env.REGION }}
+          image: ${{ env.IMAGE_URL }}:${{ needs.build.outputs.image_tag }}
+
+      - name: Verify deployment
+        run: |
+          echo "Deployed to: ${{ steps.deploy.outputs.url }}"
+          curl -sf "${{ steps.deploy.outputs.url }}/api/health" || exit 1
+
+      - name: Output deployment info
+        run: |
+          echo "### Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **URL**: ${{ steps.deploy.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Image**: ${{ env.IMAGE_URL }}:${{ needs.build.outputs.image_tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY

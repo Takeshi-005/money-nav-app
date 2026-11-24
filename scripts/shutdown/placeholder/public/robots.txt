@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+# 旧 /sitemap.xml は廃止済み（404 を返す）

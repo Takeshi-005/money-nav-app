@@ -1,0 +1,473 @@
+/* ===== Google Fonts (must be first) ===== */
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@import "tailwindcss";
+
+@import "tw-animate-css";
+
+@import "shadcn/tailwind.css";
+
+
+/* 1. テーマ構成の定義 */
+@theme {
+  /* 独自フォント */
+  --font-sans: 'Sora', 'Noto Sans JP', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* カラーマッピング: これで text-brand-500 や bg-surface-primary が使える */
+  --color-brand-50: var(--color-brand-50);
+  --color-brand-100: var(--color-brand-100);
+  --color-brand-200: var(--color-brand-200);
+  --color-brand-300: var(--color-brand-300);
+  --color-brand-400: var(--color-brand-400);
+  --color-brand-500: var(--color-brand-500);
+  --color-brand-600: var(--color-brand-600);
+  --color-brand-700: var(--color-brand-700);
+  --color-brand-800: var(--color-brand-800);
+  --color-brand-900: var(--color-brand-900);
+  --color-brand-950: var(--color-brand-950);
+
+  --color-surface-primary: var(--bg-primary);
+  --color-surface-secondary: var(--bg-secondary);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-brand: var(--text-brand);
+}
+
+/* ===== Light Mode (Default) ===== */
+:root {
+  /* Brand Colors - Deep Teal */
+  --color-brand-50: #f0fdfa;
+  --color-brand-100: #ccfbf1;
+  --color-brand-200: #99f6e4;
+  --color-brand-300: #5eead4;
+  --color-brand-400: #2dd4bf;
+  --color-brand-500: #14b8a6;
+  --color-brand-600: #0d9488;
+  --color-brand-700: #0f766e;
+  --color-brand-800: #115e59;
+  --color-brand-900: #134e4a;
+  --color-brand-950: #042f2e;
+
+  /* Accent Colors - Warm Amber */
+  --color-accent-50: #fffbeb;
+  --color-accent-100: #fef3c7;
+  --color-accent-200: #fde68a;
+  --color-accent-300: #fcd34d;
+  --color-accent-400: #fbbf24;
+  --color-accent-500: #f59e0b;
+  --color-accent-600: #d97706;
+  --color-accent-700: #b45309;
+  --color-accent-800: #92400e;
+  --color-accent-900: #78350f;
+
+  /* Semantic: Positive (Gains) */
+  --color-positive-50: #ecfdf5;
+  --color-positive-100: #d1fae5;
+  --color-positive-200: #a7f3d0;
+  --color-positive-300: #6ee7b7;
+  --color-positive-400: #34d399;
+  --color-positive-500: #10b981;
+  --color-positive-600: #059669;
+  --color-positive-700: #047857;
+  --color-positive-800: #065f46;
+  --color-positive-900: #064e3b;
+
+  /* Semantic: Negative (Losses) */
+  --color-negative-50: #fef2f2;
+  --color-negative-100: #fee2e2;
+  --color-negative-200: #fecaca;
+  --color-negative-300: #fca5a5;
+  --color-negative-400: #f87171;
+  --color-negative-500: #ef4444;
+  --color-negative-600: #dc2626;
+  --color-negative-700: #b91c1c;
+  --color-negative-800: #991b1b;
+  --color-negative-900: #7f1d1d;
+
+  /* Semantic: Neutral (Market) */
+  --color-neutral-50: #f8fafc;
+  --color-neutral-100: #f1f5f9;
+  --color-neutral-200: #e2e8f0;
+  --color-neutral-300: #cbd5e1;
+  --color-neutral-400: #94a3b8;
+  --color-neutral-500: #64748b;
+  --color-neutral-600: #475569;
+  --color-neutral-700: #334155;
+  --color-neutral-800: #1e293b;
+  --color-neutral-900: #0f172a;
+  --color-neutral-950: #020617;
+
+  /* Semantic: Warning (RSI警告) */
+  --color-warning-50: #fffbeb;
+  --color-warning-100: #fef3c7;
+  --color-warning-200: #fde68a;
+  --color-warning-300: #fcd34d;
+  --color-warning-400: #fbbf24;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+  --color-warning-700: #b45309;
+  --color-warning-800: #92400e;
+  --color-warning-900: #78350f;
+
+  /* Background & Surface */
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f1f5f9;
+  --bg-elevated: #ffffff;
+  --bg-overlay: rgba(15, 23, 42, 0.5);
+
+  /* Text */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #94a3b8;
+  --text-inverse: #f8fafc;
+  --text-brand: #0d9488;
+  --text-accent: #d97706;
+  --text-positive: #059669;
+  --text-negative: #dc2626;
+  --text-warning: #d97706;
+
+  /* Borders */
+  --border-primary: #e2e8f0;
+  --border-secondary: #f1f5f9;
+  --border-focus: #818cf8;
+  --border-positive: #a7f3d0;
+  --border-negative: #fecaca;
+  --border-warning: #fde68a;
+
+  /* Shadows (Elevation System) */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 6px rgba(15, 23, 42, 0.06), 0 2px 4px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 10px 15px rgba(15, 23, 42, 0.08), 0 4px 6px rgba(15, 23, 42, 0.04);
+  --shadow-xl: 0 20px 25px rgba(15, 23, 42, 0.10), 0 8px 10px rgba(15, 23, 42, 0.04);
+  --shadow-glow-brand: 0 0 24px rgba(13, 148, 136, 0.2), 0 0 48px rgba(13, 148, 136, 0.1);
+  --shadow-glow-accent: 0 0 24px rgba(245, 158, 11, 0.25), 0 0 48px rgba(245, 158, 11, 0.1);
+  --shadow-glow-positive: 0 0 20px rgba(16, 185, 129, 0.15);
+  --shadow-glow-negative: 0 0 20px rgba(239, 68, 68, 0.15);
+
+  /* Chart Colors */
+  --chart-line-primary: #0d9488;
+  --chart-line-secondary: #5eead4;
+  --chart-area-fill: rgba(13, 148, 136, 0.1);
+  --chart-ma5: #f97316;
+  --chart-ma25: #22c55e;
+  --chart-grid: rgba(148, 163, 184, 0.2);
+  --chart-tooltip-bg: #ffffff;
+  --chart-tooltip-border: #e2e8f0;
+
+  /* Transition */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Border Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* Z-index Scale */
+  --z-base: 0;
+  --z-elevated: 10;
+  --z-sticky: 100;
+  --z-overlay: 200;
+  --z-modal: 300;
+  --z-toast: 400;
+  --background: oklch(0.99 0 0);
+  --foreground: oklch(0.21 0.006 285.885);
+  --card: oklch(0.99 0 0);
+  --card-foreground: oklch(0.21 0.006 285.885);
+  --popover: oklch(0.99 0 0);
+  --popover-foreground: oklch(0.21 0.006 285.885);
+  --primary: oklch(0.53 0.1 186.77);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.99 0 0);
+  --secondary-foreground: oklch(0.21 0.006 285.885);
+  --muted: oklch(0.96 0.001 285.8);
+  --muted-foreground: oklch(0.52 0.015 285.9);
+  --accent: oklch(0.96 0.001 285.8);
+  --accent-foreground: oklch(0.21 0.006 285.885);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.92 0.004 286.32);
+  --input: oklch(0.92 0.004 286.32);
+  --ring: oklch(0.705 0.015 286.067);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.21 0.006 285.885);
+  --sidebar-primary: oklch(0.53 0.1 186.77);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.96 0.001 285.8);
+  --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
+  --sidebar-border: oklch(0.92 0.004 286.32);
+  --sidebar-ring: oklch(0.705 0.015 286.067);
+}
+
+/* ===== Base Styles ===== */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Sora', 'Noto Sans JP', system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  letter-spacing: -0.01em;
+  transition: background-color var(--transition-base), color var(--transition-base);
+}
+
+/* ===== Utility Classes ===== */
+/* Background utilities */
+.bg-surface-tertiary { background: var(--bg-tertiary); }
+.bg-surface-elevated { background: var(--bg-elevated); }
+
+/* Shadow utilities */
+.shadow-glow-brand { box-shadow: var(--shadow-glow-brand); }
+.shadow-glow-negative { box-shadow: var(--shadow-glow-negative); }
+
+/* ===== Gradient Utilities ===== */
+/* 135度グラデーション（カード用） */
+.bg-gradient-brand {
+  background: linear-gradient(135deg, var(--color-brand-500), var(--color-brand-600));
+}
+
+.bg-gradient-brand-deep {
+  background: linear-gradient(135deg, var(--color-brand-600), var(--color-brand-700));
+}
+
+.bg-gradient-accent {
+  background: linear-gradient(135deg, var(--color-accent-500), var(--color-accent-600));
+}
+
+.bg-gradient-accent-subtle {
+  background: linear-gradient(135deg, var(--color-accent-500), var(--color-accent-600));
+}
+
+.bg-gradient-positive {
+  background: linear-gradient(135deg, var(--color-positive-700), var(--color-positive-800));
+}
+
+.bg-gradient-negative {
+  background: linear-gradient(135deg, var(--color-negative-700), var(--color-negative-800));
+}
+
+/* 90度グラデーション（プログレスバー用） */
+.bg-gradient-brand-horizontal {
+  background: linear-gradient(90deg, var(--color-brand-500), var(--color-brand-600));
+}
+
+.bg-gradient-brand-accent {
+  background: linear-gradient(90deg, var(--color-brand-500), var(--color-accent-500));
+}
+
+.bg-gradient-accent-horizontal {
+  background: linear-gradient(90deg, var(--color-accent-500), var(--color-accent-600));
+}
+
+.bg-gradient-positive-horizontal {
+  background: linear-gradient(90deg, var(--color-positive-500), var(--color-positive-600));
+}
+
+/* ===== Component Base Styles ===== */
+/* Card base */
+.card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition-fast),
+              border-color var(--transition-fast),
+              transform var(--transition-fast);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-focus);
+}
+
+.card-interactive:hover {
+  transform: translateY(-2px);
+}
+
+/* ===== Focus States ===== */
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+/* ===== Selection ===== */
+::selection {
+  background: var(--color-brand-200);
+  color: var(--color-brand-900);
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-primary);
+  border-radius: var(--radius-full);
+  transition: background var(--transition-fast);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+/* ===== Investor Avatar Custom Classes ===== */
+.avatar-frame {
+  border: 4px solid var(--color-accent-400);
+  box-shadow:
+    0 0 0 2px var(--color-brand-700),
+    0 0 20px rgba(251, 191, 36, 0.3),
+    inset 0 0 20px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(
+    135deg,
+    var(--color-brand-800) 0%,
+    var(--color-brand-900) 100%
+  );
+}
+
+.avatar-glow {
+  background: radial-gradient(
+    circle at center,
+    rgba(251, 191, 36, 0.4) 0%,
+    transparent 70%
+  );
+  animation: avatar-pulse 3s ease-in-out infinite;
+}
+
+.avatar-scanlines {
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+}
+
+.avatar-image {
+  image-rendering: pixelated;
+  animation: avatar-reveal 0.6s ease-out;
+  transform: scale(1.2);
+}
+
+/* ===== Investor Avatar Animations ===== */
+/* 登場アニメーション */
+@keyframes avatar-reveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+    filter: brightness(2);
+  }
+  50% {
+    filter: brightness(1.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+/* パルスグロー */
+@keyframes avatar-pulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+/* ===== Background Pattern Utilities ===== */
+.bg-pattern-dots {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* ===== Print Styles ===== */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+
+  .card {
+    box-shadow: none;
+    border: 1px solid #e5e5e5;
+  }
+}
+
+@theme inline {
+  --font-sans: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

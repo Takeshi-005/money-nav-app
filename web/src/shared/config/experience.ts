@@ -1,0 +1,5 @@
+export const EXPERIENCE_CONFIG = {
+  PER_CORRECT: 10,
+  ALL_CORRECT_BONUS: 15,
+  DIAGNOSIS_BONUS: 15,
+} as const

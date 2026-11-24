@@ -1,0 +1,39 @@
+docker/n8n-data/
+.env
+
+tmp/
+
+# Playwright CLI のセッション成果物（どの階層で生成されても除外）
+**/.playwright-cli/
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Firebase debug logs
+firebase-debug.log
+**/firebase-debug.log
+
+# Firebase Hosting のデプロイ済みファイル台帳（ローカル生成物）
+**/.firebase/
+
+# Google OAuth client secrets
+client_secret_*.json
+
+# サービス停止時の退避データ（GSC CSV / Supabase ダンプ / シークレット値）
+shutdown-archive/
+
+# Terraform
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/terraform.tfvars
+terraform/*.auto.tfvars
+terraform/crash.log
+terraform/override.tf
+terraform/override.tf.json
+terraform/*_override.tf
+terraform/*_override.tf.json
+
+# Claude Code の手元の設定
+**/.claude/settings.local.json

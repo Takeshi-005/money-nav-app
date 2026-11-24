@@ -1,0 +1,17 @@
+services:
+  app:
+    build:
+      context: .
+      args:
+        # ここに Supabase の値を設定します
+        - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+        - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      secrets:
+        - SUPABASE_SERVICE_ROLE_KEY
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+secrets:
+  SUPABASE_SERVICE_ROLE_KEY:
+    file: .env # ここを環境変数からファイル指定に変更

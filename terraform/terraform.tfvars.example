@@ -1,0 +1,64 @@
+# terraform.tfvars.example - Example Variables File
+#
+# このファイルをコピーして terraform.tfvars を作成してください:
+# cp terraform.tfvars.example terraform.tfvars
+#
+# 注意: terraform.tfvars は .gitignore に含まれています
+
+# ===========================================
+# GCP設定
+# ===========================================
+
+# GCPプロジェクトID（必須）
+project_id = "your-project-id"
+
+# GCPリージョン（デフォルト: asia-northeast1）
+region = "asia-northeast1"
+
+# ===========================================
+# Cloud Run設定
+# ===========================================
+
+# Docker イメージタグ（必須）
+# ⚠️ "latest" は使用不可（Immutable Infrastructure）
+# 推奨: Git コミットSHA（例: abc1234） または セマンティックバージョン（例: v1.0.0）
+app_image_tag = "v1.0.0"
+
+# ===========================================
+# SEO計測（必須）
+# ===========================================
+
+# Search Console の対象サイトURL
+search_console_site_url = "https://your-domain.com"
+
+# GA4 プロパティID（数字）
+ga4_property_id = "123456789"
+
+# IndexNow の API キー
+indexnow_api_key = "your-indexnow-key"
+
+# ===========================================
+# ローカル開発（必須）
+# ===========================================
+
+# cloud-run-app SA の借用（impersonation）を許可する開発者のメールアドレス
+developer_email = "you@example.com"
+
+# ===========================================
+# GitHub Actions（任意）
+# ===========================================
+
+# Workload Identity で認証を許可するリポジトリ（デフォルト: Takeshi-005/kabu-news-ai）
+# github_repository = "owner/repo"
+
+# ===========================================
+# Secret管理
+# ===========================================
+#
+# シークレット（Supabase の URL・キー、Slack Webhook URL）の値は Terraform では扱いません。
+# 値を Terraform に渡すと tfstate に平文で残るためです。
+# Terraform がシークレットの入れ物を作ったあと、gcloud で直接登録します:
+#   printf '%s' "YOUR_VALUE" | gcloud secrets versions add SECRET_ID --data-file=-
+#
+# Gemini は Vertex AI を Cloud Run の SA（ADC）で呼ぶため、API キーは不要です。
+# 詳細: terraform/README.md の「Secret管理」セクション参照
