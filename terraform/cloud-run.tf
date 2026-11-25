@@ -138,6 +138,11 @@ resource "google_cloud_run_v2_service" "app" {
       }
 
       env {
+        name  = "SCHEDULER_OIDC_AUDIENCE"
+        value = local.scheduler_oidc_audience
+      }
+
+      env {
         name  = "GA4_PROPERTY_ID"
         value = var.ga4_property_id
       }

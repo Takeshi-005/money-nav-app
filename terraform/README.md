@@ -335,6 +335,7 @@ app_image_tag = "abc1234"
 | ------------------------------- | ---------------------------- | ----------------------------------------- |
 | `NODE_ENV`                      | `production`                 | Next.js 最適化モード                      |
 | `GCP_PROJECT_ID`                | `var.project_id`             | Vertex AI の呼び出し先・OIDC の検証に使う |
+| `SCHEDULER_OIDC_AUDIENCE`       | `local.scheduler_oidc_audience` | Cloud Scheduler の OIDC トークンの宛先の検証に使う |
 | `GOOGLE_GENAI_USE_VERTEXAI`     | `true`                       | Gemini を Vertex AI 経由で呼ぶ            |
 | `GOOGLE_CLOUD_LOCATION`         | `var.region`                 | Vertex AI のリージョン                    |
 | `NEXT_PUBLIC_SUPABASE_URL`      | Secret Manager               | Supabase URL                              |

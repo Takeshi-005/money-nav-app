@@ -13,6 +13,9 @@ locals {
   cloud_run_image = "${local.artifact_registry_url}/${local.project_name}/app:${var.app_image_tag}"
 
   # 共通ラベル（GCPコンソールでのフィルタリング用）
+  # Cloud Scheduler の OIDC トークンの宛先(audience)。アプリ側でも同じ値で確かめる
+  scheduler_oidc_audience = "${local.project_name}-cloud-scheduler"
+
   common_labels = {
     project    = local.project_name
     managed_by = "terraform"

@@ -20,7 +20,7 @@ resource "google_cloud_scheduler_job" "prediction_generator" {
 
     oidc_token {
       service_account_email = google_service_account.scheduler.email
-      audience              = google_cloud_run_v2_service.app.uri
+      audience              = local.scheduler_oidc_audience
     }
   }
 
@@ -54,7 +54,7 @@ resource "google_cloud_scheduler_job" "glossary_generator" {
 
     oidc_token {
       service_account_email = google_service_account.scheduler.email
-      audience              = google_cloud_run_v2_service.app.uri
+      audience              = local.scheduler_oidc_audience
     }
   }
 
@@ -88,7 +88,7 @@ resource "google_cloud_scheduler_job" "seo_data_collector" {
 
     oidc_token {
       service_account_email = google_service_account.scheduler.email
-      audience              = google_cloud_run_v2_service.app.uri
+      audience              = local.scheduler_oidc_audience
     }
   }
 
