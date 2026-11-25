@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
       }
 
       await grantExperience(
-        supabase,
+        createAdminClient(),
         user.id,
         EXPERIENCE_CONFIG.DIAGNOSIS_BONUS,
       );

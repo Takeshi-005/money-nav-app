@@ -6,6 +6,7 @@
  */
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/shared/api/supabase/server";
+import { createAdminClient } from "@/shared/api/supabase/admin";
 import type {
   DiagnosisInput,
   DiagnosisAIResult,
@@ -123,7 +124,7 @@ export async function POST(request: NextRequest) {
       }
 
       // 経験値を一括付与
-      await grantExperience(supabase, user.id, totalExpGained);
+      await grantExperience(createAdminClient(), user.id, totalExpGained);
     }
 
     return NextResponse.json({

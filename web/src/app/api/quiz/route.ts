@@ -381,7 +381,7 @@ export async function POST(request: NextRequest) {
       }
 
       // 経験値を付与
-      await grantExperience(supabase, user.id, gainedExp);
+      await grantExperience(createAdminClient(), user.id, gainedExp);
     }
 
     return NextResponse.json({
