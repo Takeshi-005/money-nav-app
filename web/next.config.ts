@@ -66,8 +66,17 @@ const nextConfig: NextConfig = {
             value: "DENY",
           },
           {
+            // 古いブラウザの XSS フィルタは誤動作の原因になるため、推奨どおり無効にする
             key: "X-XSS-Protection",
-            value: "1; mode=block",
+            value: "0",
+          },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains",
+          },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
           },
           {
             key: "Referrer-Policy",

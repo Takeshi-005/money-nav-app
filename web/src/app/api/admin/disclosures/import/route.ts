@@ -85,7 +85,7 @@ export async function POST(request: Request) {
       error: insertError?.message,
     });
     return NextResponse.json(
-      { error: insertError?.message ?? "取り込み記録の作成に失敗しました" },
+      { error: "取り込み記録の作成に失敗しました" },
       { status: 500 },
     );
   }
@@ -124,7 +124,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         importId,
-        error: `開示イベントの保存に失敗しました: ${eventsError?.message}`,
+        error: "開示イベントの保存に失敗しました",
       },
       { status: 500 },
     );
@@ -175,7 +175,7 @@ export async function POST(request: Request) {
       {
         importId,
         savedEventsCount: insertedEvents.length,
-        error: `判定の保存に失敗しました: ${analysisError.message}`,
+        error: "判定の保存に失敗しました",
       },
       { status: 500 },
     );

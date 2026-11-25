@@ -1,3 +1,4 @@
+import { createHash, timingSafeEqual } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { logger } from "@/shared/lib/logger";
 import type { LogModule } from "@/shared/lib/log-modules";
@@ -25,10 +26,20 @@ export function verifyTestEndpoint(
     );
   }
 
-  const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${cronSecret}`) {
+  const authHeader = request.headers.get("authorization") ?? "";
+  if (!safeEqual(authHeader, `Bearer ${cronSecret}`)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   return null;
+}
+
+/**
+ * 秘密の値を、一致するまでの時間の差から推測されないように比べる
+ * (長さの違いも漏らさないよう、ハッシュにそろえてから比べる)
+ */
+function safeEqual(actual: string, expected: string): boolean {
+  const a = createHash("sha256").update(actual).digest();
+  const b = createHash("sha256").update(expected).digest();
+  return timingSafeEqual(a, b);
 }

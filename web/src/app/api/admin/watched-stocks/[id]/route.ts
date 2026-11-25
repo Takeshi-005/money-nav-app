@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/shared/api/supabase/admin";
 import { checkAdmin } from "@/shared/lib/auth";
+import { logger } from "@/shared/lib/logger";
+import { LOG_MODULES } from "@/shared/lib/log-modules";
 
 const DATE_FORMAT = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -65,7 +67,14 @@ export async function PATCH(
     .single();
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    logger.error("watched_stocks の操作に失敗しました", {
+      module: LOG_MODULES.API.ADMIN_WATCHED_STOCKS,
+      error: error.message,
+    });
+    return NextResponse.json(
+      { error: "銘柄の操作に失敗しました" },
+      { status: 500 },
+    );
   }
 
   return NextResponse.json({ stock: data });
@@ -88,7 +97,14 @@ export async function DELETE(
     .eq("id", id);
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    logger.error("watched_stocks の操作に失敗しました", {
+      module: LOG_MODULES.API.ADMIN_WATCHED_STOCKS,
+      error: error.message,
+    });
+    return NextResponse.json(
+      { error: "銘柄の操作に失敗しました" },
+      { status: 500 },
+    );
   }
 
   return new NextResponse(null, { status: 204 });

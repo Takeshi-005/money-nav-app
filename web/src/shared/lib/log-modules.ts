@@ -23,6 +23,7 @@ export const LOG_MODULES = {
     ADMIN_GLOSSARY_BACKFILL: "api/admin/glossary/backfill",
     ADMIN_DISCLOSURES_PREVIEW: "api/admin/disclosures/preview",
     ADMIN_DISCLOSURES_IMPORT: "api/admin/disclosures/import",
+    ADMIN_WATCHED_STOCKS: "api/admin/watched-stocks",
     CRON_SEO_MONTHLY_REPORT: "api/cron/seo-monthly-report",
     ROADMAP: "api/roadmap",
   },

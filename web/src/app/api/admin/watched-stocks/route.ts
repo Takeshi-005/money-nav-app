@@ -3,6 +3,8 @@ import { createAdminClient } from "@/shared/api/supabase/admin";
 import { validateJpStockTicker } from "@/shared/api/market-data/jp-stock";
 import { lookupJpCompanyName } from "@/shared/api/gemini/stock-lookup";
 import { checkAdmin } from "@/shared/lib/auth";
+import { logger } from "@/shared/lib/logger";
+import { LOG_MODULES } from "@/shared/lib/log-modules";
 
 const DATE_FORMAT = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -21,7 +23,14 @@ export async function GET() {
     .order("created_at", { ascending: false });
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    logger.error("watched_stocks の操作に失敗しました", {
+      module: LOG_MODULES.API.ADMIN_WATCHED_STOCKS,
+      error: error.message,
+    });
+    return NextResponse.json(
+      { error: "銘柄の操作に失敗しました" },
+      { status: 500 },
+    );
   }
 
   return NextResponse.json({ stocks: data });
@@ -90,7 +99,14 @@ export async function POST(request: Request) {
         { status: 400 },
       );
     }
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    logger.error("watched_stocks の操作に失敗しました", {
+      module: LOG_MODULES.API.ADMIN_WATCHED_STOCKS,
+      error: error.message,
+    });
+    return NextResponse.json(
+      { error: "銘柄の操作に失敗しました" },
+      { status: 500 },
+    );
   }
 
   return NextResponse.json({ stock: data }, { status: 201 });
