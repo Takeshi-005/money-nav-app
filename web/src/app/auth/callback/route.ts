@@ -2,20 +2,15 @@ import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
+import { getSafeRedirectPath } from "@/shared/lib/safe-redirect"
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const code = searchParams.get("code")
-  const next = searchParams.get("next") ?? "/dashboard"
+  const next = getSafeRedirectPath(searchParams.get("next"))
 
-  // Cloud Run環境ではX-Forwarded-Hostヘッダーを使用
-  const forwardedHost = request.headers.get("x-forwarded-host")
-  const forwardedProto = request.headers.get("x-forwarded-proto") || "https"
-
-  // 本番環境では転送されたホストを使用、ローカルではrequest.urlを使用
-  const origin = forwardedHost
-    ? `${forwardedProto}://${forwardedHost}`
-    : new URL(request.url).origin
+  // 戻り先のオリジンは設定値を使う(X-Forwarded-Host などのヘッダーは書き換えられるため使わない)
+  const origin = process.env.NEXT_PUBLIC_APP_URL ?? new URL(request.url).origin
 
   if (code) {
     const cookieStore = await cookies()

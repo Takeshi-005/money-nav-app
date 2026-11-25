@@ -6,6 +6,7 @@
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { signInWithGoogle } from "../api/signInWithGoogle";
+import { getSafeRedirectPath } from "@/shared/lib/safe-redirect";
 import type { GoogleAuthState } from "./types";
 import { logger } from "@/shared/lib/logger";
 import { LOG_MODULES } from "@/shared/lib/log-modules";
@@ -28,8 +29,9 @@ export function useGoogleAuth(): UseGoogleAuthResult {
     setError(null);
 
     try {
-      const redirect =
-        redirectPath ?? searchParams.get("redirect") ?? "/dashboard";
+      const redirect = getSafeRedirectPath(
+        redirectPath ?? searchParams.get("redirect"),
+      );
       const { error } = await signInWithGoogle(redirect);
 
       if (error) {
