@@ -1,7 +1,7 @@
 /**
  * 診断生成のメイン関数
  */
-import { zodToJsonSchema } from "zod-to-json-schema"
+import { z } from "zod"
 import type { DiagnosisInput, DiagnosisAIResult } from "@/types/supabase"
 import { ai, GEMINI_MODEL } from "../client"
 import { callGeminiWithRetry } from "../retry"
@@ -12,9 +12,7 @@ export async function generateDiagnosis(
   input: DiagnosisInput
 ): Promise<DiagnosisAIResult> {
   const prompt = buildDiagnosisPrompt(input);
-  const diagnosisJsonSchema = zodToJsonSchema(diagnosisSchema, {
-    $refStrategy: "none", // $ref参照を使用せず、すべてインライン展開
-  }) as Record<string, unknown>;
+  const diagnosisJsonSchema = z.toJSONSchema(diagnosisSchema) as Record<string, unknown>;
   delete diagnosisJsonSchema.$schema;
 
   const response = await callGeminiWithRetry(() =>

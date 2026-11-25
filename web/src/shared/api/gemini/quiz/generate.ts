@@ -1,4 +1,4 @@
-import { zodToJsonSchema } from "zod-to-json-schema"
+import { z } from "zod"
 import type { DailyQuizContent, DifficultyLevel } from "@/types/supabase"
 import { ai, GEMINI_MODEL } from "../client"
 import { callGeminiWithRetry } from "../retry"
@@ -38,9 +38,7 @@ export interface GenerationResult {
 async function generateAttempt(context: PromptContext): Promise<DailyQuizContent> {
   const prompt = buildDynamicQuizPrompt(context)
 
-  const quizzesJsonSchema = zodToJsonSchema(dailyQuizzesSchema, {
-    $refStrategy: "none",
-  }) as Record<string, unknown>
+  const quizzesJsonSchema = z.toJSONSchema(dailyQuizzesSchema) as Record<string, unknown>
   delete quizzesJsonSchema.$schema
 
   const response = await callGeminiWithRetry(() =>

@@ -1,4 +1,3 @@
-import { zodToJsonSchema } from "zod-to-json-schema";
 import { z } from "zod";
 import { ai, GEMINI_MODEL } from "../client";
 import { callGeminiWithRetry } from "../retry";
@@ -23,9 +22,7 @@ export async function generateGlossaryTerms(
 ): Promise<GeneratedGlossaryTerm[]> {
   const prompt = buildGlossaryPrompt(existingSlugs);
 
-  const jsonSchema = zodToJsonSchema(glossaryTermsResponseSchema, {
-    $refStrategy: "none",
-  }) as Record<string, unknown>;
+  const jsonSchema = z.toJSONSchema(glossaryTermsResponseSchema) as Record<string, unknown>;
   delete jsonSchema.$schema;
 
   const response = await callGeminiWithRetry(() =>
@@ -54,9 +51,7 @@ export async function enrichGlossaryTerm(
 ): Promise<EnrichedGlossaryContent> {
   const prompt = buildGlossaryEnrichPrompt(target, availableSlugs);
 
-  const jsonSchema = zodToJsonSchema(glossaryEnrichResponseSchema, {
-    $refStrategy: "none",
-  }) as Record<string, unknown>;
+  const jsonSchema = z.toJSONSchema(glossaryEnrichResponseSchema) as Record<string, unknown>;
   delete jsonSchema.$schema;
 
   const response = await callGeminiWithRetry(() =>
