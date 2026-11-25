@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { QuizPage } from "@/views/quiz"
 import { BRAND } from "@/shared/config";
+import { serializeJsonLd } from "@/shared/lib/json-ld";
 
 export const metadata: Metadata = {
   title: "予測トレーニング | 日経平均を予測して投資判断力を鍛えよう",
@@ -67,7 +68,7 @@ export default function Page() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(structuredData) }}
       />
       <QuizPage />
     </>

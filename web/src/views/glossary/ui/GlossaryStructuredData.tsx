@@ -5,6 +5,7 @@ import {
   buildPublisher,
   getBaseUrl,
 } from "@/shared/lib/structured-data";
+import { serializeJsonLd } from "@/shared/lib/json-ld";
 
 interface Props {
   term: GlossaryTerm;
@@ -53,15 +54,15 @@ export function GlossaryStructuredData({ term }: Props) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(definedTermData) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(definedTermData) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleData) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(articleData) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbData) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbData) }}
       />
     </>
   );

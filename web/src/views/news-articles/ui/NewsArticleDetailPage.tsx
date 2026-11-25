@@ -8,6 +8,7 @@ import { findAllGlossaryTerms } from "@/entities/glossary-term";
 import { BRAND } from "@/shared/config";
 import type { LinkableTerm } from "@/shared/lib/auto-link-glossary";
 import { DateNavigation } from "./DateNavigation";
+import { serializeJsonLd } from "@/shared/lib/json-ld";
 
 interface Props {
   article: NewsArticle;
@@ -55,11 +56,11 @@ export async function NewsArticleDetailPage({ article }: Props) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(structuredData) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbData) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbData) }}
       />
       <div className="min-h-screen max-w-2xl mx-auto my-8 px-6 sm:px-8 py-8 bg-surface-secondary rounded-2xl shadow-sm">
         <NewsArticleCard article={article} glossaryTerms={glossaryTerms} />

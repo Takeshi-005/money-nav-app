@@ -4,6 +4,7 @@ import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { Typography } from "@/shared/ui/typography";
 import { AUTHOR, BRAND } from "@/shared/config";
 import { getBaseUrl } from "@/shared/lib/structured-data";
+import { serializeJsonLd } from "@/shared/lib/json-ld";
 
 export const metadata: Metadata = {
   title: "運営者情報",
@@ -32,7 +33,7 @@ export default function AboutPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(personData) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(personData) }}
       />
       <Breadcrumbs items={breadcrumbItems} className="max-w-3xl mx-auto px-4" />
       <div className="max-w-3xl mx-auto px-4 py-12 sm:px-6">

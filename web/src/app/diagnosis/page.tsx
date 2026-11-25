@@ -4,6 +4,7 @@ import { DiagnosisPage } from "@/views/diagnosis";
 import { DIAGNOSIS_FAQ_ITEMS } from "@/views/diagnosis/lib/faq-data";
 import { buildFaqPage } from "@/shared/lib/structured-data";
 import { BRAND } from "@/shared/config";
+import { serializeJsonLd } from "@/shared/lib/json-ld";
 
 export const metadata: Metadata = {
   title: "AI投資スタイル診断 | あなたは8タイプのどれ？",
@@ -72,11 +73,11 @@ export default function Page() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(quizStructuredData) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(quizStructuredData) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqStructuredData) }}
       />
       <Suspense fallback={null}>
         <DiagnosisPage />

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { HomePage } from "@/views/home";
 import { BRAND, BRAND_TITLE_DEFAULT } from "@/shared/config";
+import { serializeJsonLd } from "@/shared/lib/json-ld";
 
 export const metadata: Metadata = {
   title: {
@@ -72,11 +73,11 @@ export default function LandingPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(structuredData) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationData) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(organizationData) }}
       />
       <HomePage />
     </>

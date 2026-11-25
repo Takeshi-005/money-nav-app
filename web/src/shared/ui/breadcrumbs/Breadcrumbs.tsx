@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { cn } from "@/shared/lib/utils"
+import { serializeJsonLd } from "@/shared/lib/json-ld";
 
 export interface BreadcrumbItem {
   label: string
@@ -27,7 +28,7 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(structuredData) }}
       />
 
       <nav aria-label="パンくずリスト" className={cn("py-3", className)}>

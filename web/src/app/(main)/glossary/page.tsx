@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { GlossaryListPage } from "@/views/glossary";
 import { BRAND } from "@/shared/config";
+import { serializeJsonLd } from "@/shared/lib/json-ld";
 
 export const revalidate = 3600;
 
@@ -51,7 +52,7 @@ export default function Page() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(structuredData) }}
       />
       <GlossaryListPage />
     </>

@@ -11,6 +11,7 @@ import { Typography } from "@/shared/ui/typography";
 import { cn } from "@/shared/lib/utils";
 import { buildBreadcrumbList } from "@/shared/lib/structured-data";
 import { BRAND } from "@/shared/config";
+import { serializeJsonLd } from "@/shared/lib/json-ld";
 
 interface Props {
   params: Promise<{ typeCode: string }>;
@@ -76,11 +77,11 @@ export default async function DiagnosisResultPage({ params }: Props) {
     <div className="min-h-screen py-12 px-4">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(learningResourceData) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(learningResourceData) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbData) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbData) }}
       />
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-8">

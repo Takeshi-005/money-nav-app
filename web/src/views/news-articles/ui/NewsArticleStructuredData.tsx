@@ -10,6 +10,7 @@ import {
   buildPublisher,
   getBaseUrl,
 } from "@/shared/lib/structured-data";
+import { serializeJsonLd } from "@/shared/lib/json-ld";
 
 interface Props {
   article: NewsArticle;
@@ -48,11 +49,11 @@ export function NewsArticleStructuredData({ article }: Props) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(newsArticleData) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(newsArticleData) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbData) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbData) }}
       />
     </>
   );

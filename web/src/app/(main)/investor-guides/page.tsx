@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { InvestorGuidesListPage } from "@/views/investor-guides-list";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { BRAND } from "@/shared/config";
+import { serializeJsonLd } from "@/shared/lib/json-ld";
 
 export const metadata: Metadata = {
   title: "投資家タイプ別ガイド | 自分に合った投資の学び方を見つける",
@@ -109,7 +110,7 @@ export default function Page() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(structuredData) }}
       />
       <Breadcrumbs
         items={breadcrumbItems}

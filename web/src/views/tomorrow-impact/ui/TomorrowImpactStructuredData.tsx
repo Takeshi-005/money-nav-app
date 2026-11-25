@@ -6,6 +6,7 @@ import {
   buildPublisher,
   getBaseUrl,
 } from "@/shared/lib/structured-data";
+import { serializeJsonLd } from "@/shared/lib/json-ld";
 
 interface Props {
   latestDate: string;
@@ -102,12 +103,12 @@ export function TomorrowImpactStructuredData({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(collectionPageData),
+          __html: serializeJsonLd(collectionPageData),
         }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbData) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbData) }}
       />
     </>
   );

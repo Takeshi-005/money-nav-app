@@ -19,6 +19,7 @@ import {
   getImpactEventByDateTicker,
   getImpactStocksByDate,
 } from "../lib";
+import { serializeJsonLd } from "@/shared/lib/json-ld";
 
 const IMPACT_CONFIG = {
   positive: {
@@ -114,15 +115,15 @@ export async function DisclosureEventPage({ date, ticker }: Props) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleData) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(articleData) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbData) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbData) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqData) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqData) }}
       />
 
       <Breadcrumbs
